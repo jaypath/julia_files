@@ -1,0 +1,10 @@
+Data Analysis To Do
+[ ] Characterize per spike performance of IEDDA
+  [ ] human mark IEDs in some subsample of AD data
+  [ ] Run IEDDA on this subsample, check performance, retrain on this data
+  [ ] run IEDDA on held out marked data, check performance
+  
+[ ] Characterize sleep in this data set
+
+[ ] reduce EEG to mimic spotlite data (probably just 6 channel)
+  [ ] compare IEDDA 6 channel to full 10-20 IEDDA to human markings
