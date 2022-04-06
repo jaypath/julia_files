@@ -1,8 +1,13 @@
 Data Analysis To Do
-- [ ] Characterize per spike performance of IEDDA
-  - [ ] human mark IEDs in some subsample of AD data
+- [ ] Characterize per discharge performance of IEDDA [IEDDA = our AI discharge detector]
+  - [ ] human mark IEDs in some subsample of AD data - create task for this
+    -create task
+    -assign reviewers
+    -follow up
+    -estimated time: 
   - [ ] Run IEDDA on this subsample, check performance, retrain on this data
   - [ ] run IEDDA on held out marked data, check performance
+  - [ ] Run the praxis spike peak/other metrics
   
 - [ ] Characterize per study performance of IEDDA
   - [ ] Run IEDDA on across data sets, eval Sn, Sp, PPV, NPV at the study level
