@@ -14,6 +14,10 @@ Data Analysis To Do
   - [ ] Run the praxis spike peak/other metrics
   - [ ] TOPOPLOT of spike activity!!!
   
+- [ ] reduce EEG to mimic spotlite data (probably just 6 channel)
+  - [ ] compare IEDDA 6 channel to full 10-20 IEDDA to human markings
+  - [ ] compare IEDDA 8 channel to full 10-20 IEDDA to human markings
+
 - [ ] Characterize per study performance of IEDDA
   - [ ] Run IEDDA on across data sets, eval Sn, Sp, PPV, NPV at the study level
   
@@ -24,6 +28,4 @@ Data Analysis To Do
   - [ ] run sleep depth analysis
   - [ ] run spindle detection
 
-- [ ] reduce EEG to mimic spotlite data (probably just 6 channel)
-  - [ ] compare IEDDA 6 channel to full 10-20 IEDDA to human markings
-  - [ ] compare IEDDA 8 channel to full 10-20 IEDDA to human markings
+
