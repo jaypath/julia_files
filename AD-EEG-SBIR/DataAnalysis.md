@@ -8,6 +8,7 @@ Data Analysis To Do
   - [ ] Run IEDDA on this subsample, check performance, retrain on this data
   - [ ] run IEDDA on held out marked data, check performance
   - [ ] Run the praxis spike peak/other metrics
+  - [ ] TOPOPLOT of spike activity!!!
   
 - [ ] Characterize per study performance of IEDDA
   - [ ] Run IEDDA on across data sets, eval Sn, Sp, PPV, NPV at the study level
