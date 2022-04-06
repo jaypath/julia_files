@@ -1,6 +1,6 @@
 Data Analysis To Do
--[ ] Characterize per spike performance of IEDDA
-  -[] human mark IEDs in some subsample of AD data
+- [ ] Characterize per spike performance of IEDDA
+  - [] human mark IEDs in some subsample of AD data
   [ ] Run IEDDA on this subsample, check performance, retrain on this data
   [ ] run IEDDA on held out marked data, check performance
   
