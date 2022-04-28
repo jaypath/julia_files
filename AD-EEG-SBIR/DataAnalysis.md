@@ -29,3 +29,25 @@ Data Analysis To Do
   - [ ] run spindle detection
 
 
+
+AD EEG Marking
+- [ ] AD IED marking task
+-- [ ] Task 1 EEGs
+--- [ ] AJ sets up a marking task where human marks IED (for Syd, Jay, Brandon, Kristy)
+--- [ ] AJ can ask Kendall, Hannah, Kim for assist on this task (which has been done)
+--- [ ] Syd suggests user highlights spike --> option asks 1 = spike 2 = BETS
+--- [ ] Task should assign to the users (so each reader above reads 1/2 of studies)
+
+
+-- Task 1b
+--- [ ] Reduce task 1 data set to spotlite montage (Fp1/F7/...)
+--- [ ] need to add some random noise data [think about this]
+--- [ ] task to evaluate human marked spikes from task 1a and decide if spike is still present
+--- [ ] This task is identical to Hannah's IED voting task
+
+-- [ ] Task 2 PSGs
+--- [ ] Jay will find out what leads are present in what % of MGH PSGs
+--- [ ] Sleep scoring already done
+--- [ ] IEDs (same as task 1)
+
+Intake for tasks?
