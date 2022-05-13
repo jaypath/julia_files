@@ -28,6 +28,10 @@ function useICD()
   icds = Mgh2019Utils.load(; schema="bome.icd-code@1");
 end
 
+function useReports()
+  reports = Mgh2019Utils.load(; schema="bome.icd-report@1");
+end
+
   function countByICD(searchstring)
            icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds)
            psg_matches = semijoin(recs_psg, icd_term; on=:subject)
