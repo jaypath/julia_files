@@ -5,9 +5,6 @@ using DataFrames, DataMapUtils, Mgh2019Utils, AWSS3, BOME, Dates
 recordings = Mgh2019Utils.load(; schema="bome.recording@1");
 persons = Mgh2019Utils.load(; schema="bome.person@1");
 
-reports
-
-
 #old method, looks for annotations that indicate a recording is a PSG
 #psg_annots = Mgh2019Utils.load(; name="all.mgh-2019.psg.bome.onda.annotations")
 #psg_recs = semijoin(recordings, psg_annots; on=:id => :recording)
