@@ -27,7 +27,7 @@ function useICD()
 end
 
 function useReports()
-  return Mgh2019Utils.load(; schema="bome.icd-report@1");
+  return Mgh2019Utils.load(; schema="bome.report@1");
 end
 
   function countByICD(searchstring)
