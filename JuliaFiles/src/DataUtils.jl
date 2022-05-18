@@ -37,7 +37,9 @@ end
            return psg_matches, eeg_matches
   end
 
-
+function searchByReport(searchstring)
+    return filter(:report_text => contains(searchstring),dropmissing(reports,:report_text));
+end
 
 # MGH-2019 augmented signals table
 # Prepares a `augmented_signals` that contains matches the signals with ages and subjects
