@@ -22,11 +22,12 @@ read_with(reader, file::AbstractString) = read_with(reader, joinpath(MGH_ROOT, f
 
 #function to count recordings by ICD term
 function useICD()
-  icds = Mgh2019Utils.load(; schema="bome.icd-code@1");
+  return Mgh2019Utils.load(; schema="bome.icd-code@1");
+  
 end
 
 function useReports()
-  reports = Mgh2019Utils.load(; schema="bome.icd-report@1");
+  return Mgh2019Utils.load(; schema="bome.icd-report@1");
 end
 
   function countByICD(searchstring)
