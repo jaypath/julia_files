@@ -37,8 +37,12 @@ end
            return psg_matches, eeg_matches
   end
 
-function searchByReport(searchstring)
+function searchReports(searchstring)
     return filter(:report_text => contains(searchstring),dropmissing(reports,:report_text));
+end
+
+function searchAugmentedSignalsBySubject(subID)
+    return filter(:subject => contains(subID),dropmissing(augmented_signals,:subject));
 end
 
 # MGH-2019 augmented signals table
