@@ -32,9 +32,8 @@ end
 
   function countByICD(searchstring)
            icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds)
-           psg_matches = semijoin(recs_psg, icd_term; on=:subject)
-           eeg_matches = semijoin(recs_eeg,icd_term; on=:subject)  
-           return psg_matches, eeg_matches
+           matches = semijoin(augmented_signals, icd_term; on=:subject)
+           return matches;
   end
 
 function searchReports(searchstring)
