@@ -78,7 +78,7 @@ function prepare_augmented_signals()
     transform!(augmented_signals,
                :age_in_days => ByRow(passmissing(d -> d / 365.25)) => :age_in_years)
     select!(augmented_signals, Symbol.(names(signals))..., :subject, :age_in_years, :birth,
-            :start, :age)
+            :start, :age, :test_type)
 
     return augmented_signals
 end
