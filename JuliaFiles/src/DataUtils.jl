@@ -10,8 +10,8 @@ persons = Mgh2019Utils.load(; schema="bome.person@1");
 #psg_recs = semijoin(recordings, psg_annots; on=:id => :recording)
 
 #this method uses MGH_TEST_TYPE
-recs_psg = filter(:mgh_test_type => contains(r"psg"i), dropmissing(recordings,:mgh_test_type));
-recs_eeg = filter(:mgh_test_type => contains(r"eeg"i),dropmissing(recordings,:mgh_test_type));
+#recs_psg = filter(:mgh_test_type => contains(r"psg"i), dropmissing(recordings,:mgh_test_type));
+#recs_eeg = filter(:mgh_test_type => contains(r"eeg"i),dropmissing(recordings,:mgh_test_type));
 
 
 #this section is to load signals table... note to self, ask someone if there is a utils function for this instead
@@ -50,7 +50,7 @@ end
 function prepare_augmented_signals()
     p = select(persons, :id => :subject,
                :birth => ByRow(passmissing(d -> d.date)) => :birth)
-    r = select(recordings, :subject, :id => :recording, :subject_age => :age,
+    r = select(recordings, :subject, :id => :recording, :subject_age => :age, :mgh_test_type => :test_type;
                :start => ByRow(passmissing(d -> d.date)) => :start)
 
     # Only contains signals that have been ingested onto S3
