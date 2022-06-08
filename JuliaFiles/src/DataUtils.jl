@@ -30,7 +30,7 @@ function useReports()
   return Mgh2019Utils.load(; schema="bome.report@1");
 end
 
-  function countByICD(searchstring)
+  function searchByICD(searchstring)
            icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds)
            matches = semijoin(augmented_signals, icd_term; on=:subject)
            return matches;
