@@ -40,6 +40,10 @@ function searchReports(searchstring)
     return filter(:report_text => contains(searchstring),dropmissing(reports,:report_text));
 end
 
+function reportBySubject(subject)
+      return filter(:subject_id => d -> d == subject,dropmissing(reports,:subject_id));
+end
+
 function searchAugmentedSignalsBySubject(subID)
     return filter(:subject => contains(subID),dropmissing(augmented_signals,:subject));
 end
