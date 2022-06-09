@@ -21,6 +21,12 @@ function useICD()
   
 end
 
+function subjectICDs(df)
+  matches = leftjoin(df, icds; on=:subject)  
+  return matches;
+end
+
+
 function searchByICD(searchstring)
   icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds)
   matches = semijoin(augmented_signals, icd_term; on=:subject)
@@ -138,4 +144,11 @@ filter!(:test_type => d -> contains(lowercase(d),"psg"),schiz);
 
 summaryTable = [schiz.:subject schiz.:birth schiz.:age_in_years schiz.:test_type schiz.:is_male schiz.:race]
 
+#schizophrenic pts with medications
 schiz_with_meds = get_meds_matching_subjects(schiz)
+
+#schizophrenic pts with their ICD codes
+schiz_with_icds = subjectICDs(schiz)
+
+#count ICDs
+ICDcount = sort(combine(groupby(unique(schiz_with_icds,[:diagnosis, :subject]),[:diagnosis]),nrow=>:count),order(:count, rev=true))
