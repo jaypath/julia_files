@@ -27,6 +27,13 @@ function searchByICD(searchstring)
   return matches;
 end
 
+function listICDs(searchstring)
+  icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds)
+  
+  return unique(icd_term,:code);
+end
+
+
 #medications info
 const MEDICATIONS_ARROW_TABLE_ORIGIN = "s3://project-jasper-sandbox/eph-sandbox/all_meds_data.arrow"
 
@@ -67,7 +74,7 @@ end
 # MGH-2019 augmented signals table
 # Prepares a `augmented_signals` that contains matches the signals with ages and subjects
 function prepare_augmented_signals()
-    p = select(persons, :id => :subject,
+    p = select(persons, :id => :subject, :is_male, :race, 
                :birth => ByRow(passmissing(d -> d.date)) => :birth)
     r = select(recordings, :subject, :mgh_pseudo_medical_record_number => :pMRN, :id => :recording, :subject_age => :age, :mgh_test_type => :test_type,
                :start => ByRow(passmissing(d -> d.date)) => :start)
@@ -97,7 +104,7 @@ function prepare_augmented_signals()
     transform!(augmented_signals,
                :age_in_days => ByRow(passmissing(d -> d / 365.25)) => :age_in_years)
     select!(augmented_signals, Symbol.(names(signals))..., :subject, :age_in_years, :birth,
-            :start, :age, :test_type, :pMRN)
+            :start, :age, :test_type, :pMRN, :is_male, :race)
 
     return augmented_signals
 end
@@ -123,5 +130,12 @@ end
 icds = useICD();
 
 #search schizophrenia by text
-schiz = unique(searchByICD("schizophrenia"),:subject);
+schizICDs = listICDs("schizophrenia);
+schiz = searchByICD("schizophrenia");
+schiz = dropmissing(schiz,:subject);
+unique!(schiz,:subject);
+filter!(:test_type => d -> contains(lowercase(d),"psg"),schiz);
+
+summaryTable = [schiz.:subject schiz.:birth schiz.:age_in_years schiz.:test_type schiz.:is_male schiz.:race]
+
 schiz_with_meds = get_meds_matching_subjects(schiz)
