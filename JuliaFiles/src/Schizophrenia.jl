@@ -5,7 +5,7 @@
 #comorbidities (counts)
 
 
-using DataFrames, DataMapUtils, Mgh2019Utils, AWSS3, BOME, Dates, AWS, Scratch
+using DataFrames, DataMapUtils, Mgh2019Utils, AWSS3, BOME, Dates, AWS, Scratch, Arrow
 
 recordings = Mgh2019Utils.load(; schema="bome.recording@1");
 persons = Mgh2019Utils.load(; schema="bome.person@1");
@@ -46,7 +46,7 @@ function get_subjects_matching_meds(meds_string::AbstractString)
     check_medication = x -> occursin(uppercase(meds_string), x)
     df = subset(medications, :MedicationDSC => ByRow(check_medication))
 
-    df = innerjoin(df, augmented_signals; on= [:pMRN => :pseudomrn],
+    df = innerjoin(df, augmented_signals; on= [:pMRN => :pMRN],
                    matchmissing=:notequal)
 
     return unique(df.subject)
@@ -54,7 +54,7 @@ end
 
 function get_meds_matching_subjects(df)
   #df is be the dataframe of selected pts
-    df = innerjoin(medications,df, on= [:pMRN => :pseudomrn], matchmissing=:notequal)
+    df = innerjoin(medications,df, on= [:pMRN => :pMRN], matchmissing=:notequal)
     return df
 end
 
@@ -69,7 +69,7 @@ end
 function prepare_augmented_signals()
     p = select(persons, :id => :subject,
                :birth => ByRow(passmissing(d -> d.date)) => :birth)
-    r = select(recordings, :subject, :mgh_pseudo_medical_record_number => :pseudomrn, :id => :recording, :subject_age => :age, :mgh_test_type => :test_type,
+    r = select(recordings, :subject, :mgh_pseudo_medical_record_number => :pMRN, :id => :recording, :subject_age => :age, :mgh_test_type => :test_type,
                :start => ByRow(passmissing(d -> d.date)) => :start)
 
     # Only contains signals that have been ingested onto S3
@@ -97,7 +97,7 @@ function prepare_augmented_signals()
     transform!(augmented_signals,
                :age_in_days => ByRow(passmissing(d -> d / 365.25)) => :age_in_years)
     select!(augmented_signals, Symbol.(names(signals))..., :subject, :age_in_years, :birth,
-            :start, :age, :test_type)
+            :start, :age, :test_type, :pMRN)
 
     return augmented_signals
 end
