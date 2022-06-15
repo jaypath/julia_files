@@ -53,7 +53,7 @@ end
 function prepare_augmented_signals()
     p = select(persons, :id => :subject,
                :birth => ByRow(passmissing(d -> d.date)) => :birth)
-    r = select(recordings, :subject, :id => :recording, :subject_age => :age, :mgh_test_type => :test_type,
+    r = select(recordings, :subject, :id => :recording, :subject_age => :age, :mgh_test_type => :test_type, :MGH_pseudo_medical_record_number => :pMRN, 
                :start => ByRow(passmissing(d -> d.date)) => :start)
 
     # Only contains signals that have been ingested onto S3
@@ -81,7 +81,7 @@ function prepare_augmented_signals()
     transform!(augmented_signals,
                :age_in_days => ByRow(passmissing(d -> d / 365.25)) => :age_in_years)
     select!(augmented_signals, Symbol.(names(signals))..., :subject, :age_in_years, :birth,
-            :start, :age, :test_type)
+            :start, :age, :test_type, :pMRN)
 
     return augmented_signals
 end
