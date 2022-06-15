@@ -45,7 +45,7 @@ function reportBySubject(subject)
 end
 
 function reportBypMRN(pMRN)
-      return filter(:mgh_pseudo_medical_record_number => d -> d == pMRN,dropmissing(reports,:pMRN));
+      return filter(:mgh_pseudo_medical_record_number => d -> d == pMRN,dropmissing(reports,:mgh_pseudo_medical_record_number));
 end
 
 function searchAugmentedSignalsBySubject(subID)
