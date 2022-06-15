@@ -48,6 +48,11 @@ function reportBypMRN(pMRN)
       return filter(:mgh_pseudo_medical_record_number => d -> d == pMRN,dropmissing(reports,:mgh_pseudo_medical_record_number));
 end
 
+function AugmentedSignalsBypMRN(pMRN)
+      return unique(filter(:pMRN => d -> d == pMRN,dropmissing(augmented_signals,:pMRN)),:recording);
+end
+
+
 function searchAugmentedSignalsBySubject(subID)
     return filter(:subject => contains(subID),dropmissing(augmented_signals,:subject));
 end
