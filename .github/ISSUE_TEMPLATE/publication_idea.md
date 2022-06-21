@@ -1,6 +1,7 @@
 ---
 name: Publication idea
 description: Submit a publication idea
+about: Submit an idea for a publication
 title: "[idea]: "
 assignees:
   - CiaraMartinPhD
