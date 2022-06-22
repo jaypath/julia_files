@@ -68,6 +68,8 @@ function matchReport2Recording(reports,augmentedsignals)
   end
   reports[!,:recordingID]=recID;
   reports[!,:recordingDateDiffDays]=recrepDate;
+  reports[!,:recordingMatchStatus]=recMatchStatus;
+  
   return reports
   
 end
