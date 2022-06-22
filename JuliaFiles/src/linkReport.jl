@@ -1,6 +1,7 @@
 #assume you have dataframes: augmented_signals, reports
 #above can be generated for mgh2019 by code in this repo
 
+using StringDistances
 
 function isField(dfname,fldname)
   if sum(names(dfname).==fldname)>0
@@ -12,6 +13,9 @@ function isField(dfname,fldname)
 end
 
 function matchReport2Recording(reports,recordings)
+  #match MGH report to MGH recording tables
+  #to do... write this function :(
+  
   #recordings here should be of type augmented_signals (has columns for subject, recording ID, recording signals, pMRN, etc
   #reports here should contain fields pMRN and encounterDTS (date of encounter)
   
@@ -35,7 +39,35 @@ function matchReport2Metadata(reports,metareports)
   if isField(reports,"pMRN")==false then
     transorm!(reports,:mgh_pseudo_medical_record_number=>:pMRN);
   end if
+  recID = [];
+     
+  #match by pMRN
+  for row in eachrow(metareports)
+    #match pmrn to reports
+    temp = filter(:pMRN=>d->d==row.:pMRN,dropmissing(reports,:report_text));
+    if size(temp)[1]==0 then
+      recID = vcat(recID,missing);
+    else
+      bestmatch = length(row.:ReportTXT);
+      bestMatchRecID = missing;
+      for reprow in eachrow(temp)
+        thismatch = OptimalStringAlignment()(reprow.:report_text,row.ReportTXT);
+        if thismatch < bestmatch then
+          bestmatch = thismatch;
+          bestMatchRecID = reprow.:ID;
+        end 
+      end
+      #if the ID is missing (no match) or the levenshtein distance is greater than 5% then call it missing
+      if ismissing(bestMatchRecID) || bestmatch > 0.05*length(row.ReportTXT) then
+        recID = vcat(recID,missing);
+      else
+        recID = vcat(recID,bestMatchRecID);
+      end
+          
+    end
+  end
       
-  df = innerjoin(
-
-  
+  metareports[!,:reportID]=recID;
+  return metareports
+end
+    
