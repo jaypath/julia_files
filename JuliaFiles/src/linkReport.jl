@@ -40,6 +40,7 @@ function matchReport2Metadata(reports,metareports)
     transorm!(reports,:mgh_pseudo_medical_record_number=>:pMRN);
   end
   recID = [];
+  recMatch = [];
      
   #match by pMRN
   for row in eachrow(metareports)
@@ -60,14 +61,17 @@ function matchReport2Metadata(reports,metareports)
       #if the ID is missing (no match) or the levenshtein distance is greater than 5% then call it missing
       if ismissing(bestMatchRecID) || bestmatch > 0.05*length(row.ReportTXT) 
         recID = vcat(recID,missing);
+        recMatch = vcat(recMatch,missing);
       else
         recID = vcat(recID,bestMatchRecID);
+        recMatch = vcat(recMatch,1-bestmatch/length(row.:ReportTXT));
       end
           
     end
   end
       
   metareports[!,:reportID]=recID;
+  metareports[!,:reportMatchPcnt]=recMatch;
   return metareports
 end
     
