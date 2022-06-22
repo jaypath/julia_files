@@ -38,7 +38,7 @@ function matchReport2Metadata(reports,metareports)
 
   if isField(reports,"pMRN")==false then
     transorm!(reports,:mgh_pseudo_medical_record_number=>:pMRN);
-  end if
+  end
   recID = [];
      
   #match by pMRN
