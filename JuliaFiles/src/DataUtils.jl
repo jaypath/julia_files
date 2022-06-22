@@ -95,6 +95,9 @@ function prepare_augmented_signals()
     return augmented_signals
 end
 
+function generatePortalURL(recordingID)
+  return "https://portal.beacon.bio/viewer/project/4ebfbd67-97e3-4c00-993c-a01cce63e10a/" * recordingID * "?direction=asc&gain=100&montage=physical&sort=span"
+end
 signals = read_with(read_bome_table, "all.mgh-2019.onda.signals.arrow")
 
 # Tables derived from MGH 2019
