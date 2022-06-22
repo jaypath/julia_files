@@ -12,11 +12,11 @@ function isField(dfname,fldname)
   
 end
 
-function matchReport2Recording(reports,recordings)
+function matchReport2Recording(reports,augmentedsignals)
   #match MGH report to MGH recording tables
   #to do... write this function :(
   
-  #recordings here should be of type augmented_signals (has columns for subject, recording ID, recording signals, pMRN, etc
+  #augmentedsignals is recordings of type augmented_signals (has columns for subject, recording ID, recording signals, pMRN, etc
   #reports here should contain fields pMRN and EncounterDTS (date of encounter) - which may be renamed mgh_encounter
   
   #for each report, match recordings as follows:
@@ -24,9 +24,11 @@ function matchReport2Recording(reports,recordings)
   #find closest date
   #see if date is within some tolerance
   
-  if isField(recordings,"pMRN")==false 
-    transform!(recordings,:mgh_pseudo_medical_record_number=>:pMRN);
+  if isField(augmentedsignals,"pMRN")==false 
+    transform!(augmentedsignals,:mgh_pseudo_medical_record_number=>:pMRN);
   end
+  
+  augmentedsignals = dropmissing(augmentedsignals,:start);
   
   recID = [];
   recrepDate = [];
@@ -36,7 +38,7 @@ function matchReport2Recording(reports,recordings)
   
   for repRow in eachrow(reports)
     #for each report, find a matching pMRN in recordings
-    temp = filter(:pMRN=>d->d==repRow.:pMRN,dropmissing(recordings,:pMRN));
+    temp = filter(:pMRN=>d->d==repRow.:pMRN,dropmissing(augmentedsignals,:pMRN));
     if size(temp)[1]==0 
       #no match    
       recID = vcat(recID,missing);
@@ -102,3 +104,4 @@ function matchReport2Metadata(reports,metareports)
   return metareports
 end
     
+ppr_matched = matchReport2Metadata(reports,ppr);
