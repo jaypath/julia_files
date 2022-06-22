@@ -46,7 +46,8 @@ function matchReport2Recording(reports,augmentedsignals)
     else
       for recRow in eachrow(temp)
         #find the rec with the shortest diff between start and encounterDTS
-        if Dates.value(recRow.:start.date - repRow.:EncounterDTS.date) < best_recrepDate
+#        if Dates.value(recRow.:start.date - repRow.:EncounterDTS.date) < best_recrepDate
+        if Dates.value(Date(recRow.:start) - Date(repRow.:EncounterDTS,"mm/dd/yyyy")) < best_recrepDate
           best_recrepDate = Dates.value(recRow.:start.date - repRow.:EncounterDTS.date);
           best_recID = recRow.id;          
         end
