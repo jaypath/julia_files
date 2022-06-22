@@ -22,12 +22,13 @@ function matchReport2Recording(reports,recordings)
   #for each report, match recordings as follows:
   #find all matching pMRN
   #find closest date
-  #see if date is within tolerance specified
+  #see if date is within some tolerance
   
   if isField(reports,"pMRN")==false 
     transorm!(reports,:mgh_pseudo_medical_record_number=>:pMRN);
   end
-    
+  
+  
   
   
 end
