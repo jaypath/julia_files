@@ -54,7 +54,7 @@ function matchReport2Metadata(reports,metareports)
         thismatch = OptimalStringAlignment()(reprow.:report_text,row.ReportTXT);
         if thismatch < bestmatch 
           bestmatch = thismatch;
-          bestMatchRecID = reprow.:ID;
+          bestMatchRecID = reprow.:id;
         end 
       end
       #if the ID is missing (no match) or the levenshtein distance is greater than 5% then call it missing
