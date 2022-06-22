@@ -1,7 +1,7 @@
 #assume you have dataframes: augmented_signals, reports
 #above can be generated for mgh2019 by code in this repo
 
-using StringDistances, Dates
+using StringDistances, Dates, CSV
 
 function isField(dfname,fldname)
   if sum(names(dfname).==fldname)>0 
@@ -29,6 +29,7 @@ function matchReport2Recording(reports,augmentedsignals)
   end
   
   augmentedsignals = dropmissing(augmentedsignals,:start);
+  filter!(:test_type=="eeg", dropmissing(augmentedsignals,:test_type));  #use only EEGs
   
   recID = [];
   recrepDate = [];
@@ -117,6 +118,7 @@ function matchReport2Metadata(reports,metareports)
   metareports[!,:reportMatchPcnt]=recMatch;
   return metareports
 end
-    
+
+ppr = DataFrame(CSV.File("ppr.csv"));
 ppr_matched = matchReport2Metadata(reports,ppr);
 ppr_matched = matchReport2Recording(ppr_matched,augmented_signals);
