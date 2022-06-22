@@ -29,7 +29,7 @@ function matchReport2Recording(reports,augmentedsignals)
   end
   
   augmentedsignals = dropmissing(augmentedsignals,:start);
-  filter!(:test_type=="eeg", dropmissing(augmentedsignals,:test_type));  #use only EEGs
+  augmentedsignals = filter(:test_type=>d->d=="eeg", dropmissing(augmentedsignals,:test_type));  #use only EEGs
   
   recID = [];
   recrepDate = [];
@@ -58,7 +58,7 @@ function matchReport2Recording(reports,augmentedsignals)
       end
       if best_recrepDate>300  #arbitrarily using a 300 day max
         recID = vcat(recID,missing);
-        recrepDate = vcat(recrepDate,missing);      
+        recrepDate = vcat(recrepDate,best_recrepDate);      
         recMatchStatus = vcat(recMatchStatus,"Match date >300 days different");
       else
         recID = vcat(recID,best_recID);
