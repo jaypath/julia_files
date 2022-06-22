@@ -1,7 +1,7 @@
 #assume you have dataframes: augmented_signals, reports
 #above can be generated for mgh2019 by code in this repo
 
-using StringDistances
+using StringDistances, Dates
 
 function isField(dfname,fldname)
   if sum(names(dfname).==fldname)>0 
@@ -17,19 +17,45 @@ function matchReport2Recording(reports,recordings)
   #to do... write this function :(
   
   #recordings here should be of type augmented_signals (has columns for subject, recording ID, recording signals, pMRN, etc
-  #reports here should contain fields pMRN and encounterDTS (date of encounter)
+  #reports here should contain fields pMRN and EncounterDTS (date of encounter) - which may be renamed mgh_encounter
   
   #for each report, match recordings as follows:
   #find all matching pMRN
   #find closest date
   #see if date is within some tolerance
   
-  if isField(reports,"pMRN")==false 
-    transorm!(reports,:mgh_pseudo_medical_record_number=>:pMRN);
+  if isField(recordings,"pMRN")==false 
+    transform!(recordings,:mgh_pseudo_medical_record_number=>:pMRN);
   end
   
+  recID = [];
+  recrepDate = [];
   
+  best_recrepDate = 10000; #some arbitrarily large number
+  best_recID = missing;
   
+  for repRow in eachrow(reports)
+    #for each report, find a matching pMRN in recordings
+    temp = filter(:pMRN=>d->d==repRow.:pMRN,dropmissing(recordings,:pMRN));
+    if size(temp)[1]==0 
+      #no match    
+      recID = vcat(recID,missing);
+      recrepDate = vcat(recrepDate,missing);
+    else
+      for recRow in eachrow(temp)
+        #find the rec with the shortest diff between start and encounterDTS
+        if Dates.value(recRow.:start.date - repRow.:EncounterDTS.date) < best_recrepDate
+          best_recrepDate = Dates.value(recRow.:start.date - repRow.:EncounterDTS.date);
+          best_recID = recRow.id;          
+        end
+      end
+      recID = vcat(recID,best_recID);
+      recrepDate = vcat(recrepDate,best_recrepDate);      
+    end
+  end
+  reports[!,:recordingID]=recID;
+  reports[!,:recordingDateDiffDays]=recrepDate;
+  return reports
   
 end
 
@@ -38,7 +64,7 @@ function matchReport2Metadata(reports,metareports)
   #match requires a field in metareports for pMRN and reportTXT
 
   if isField(reports,"pMRN")==false 
-    transorm!(reports,:mgh_pseudo_medical_record_number=>:pMRN);
+    transform!(reports,:mgh_pseudo_medical_record_number=>:pMRN);
   end
   recID = [];
   recMatch = [];
