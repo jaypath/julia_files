@@ -50,7 +50,7 @@ function matchReport2Recording(reports,augmentedsignals)
         datedifference = abs(Dates.value(Date(recRow.:start) - Date(repRow.:EncounterDTS,"mm/dd/yyyy")));
         if  datedifference < best_recrepDate
           best_recrepDate = datedifference;
-          best_recID = recRow.id;          
+          best_recID = recRow.recording;          
         end
       end
       recID = vcat(recID,best_recID);
