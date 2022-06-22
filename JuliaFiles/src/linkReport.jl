@@ -35,10 +35,10 @@ function matchReport2Recording(reports,augmentedsignals)
   recrepDate = [];
   recMatchStatus = [];
   
-  best_recID = missing;
-  best_recrepDate = 10000; #some arbitrarily large number
   
   for repRow in eachrow(reports)
+  best_recID = missing;
+  best_recrepDate = 10000; #some arbitrarily large number
     #for each report, find a matching pMRN in recordings
     temp = filter(:pMRN=>d->d==repRow.:pMRN,dropmissing(augmentedsignals,:pMRN));
     if size(temp)[1]==0 
@@ -56,13 +56,13 @@ function matchReport2Recording(reports,augmentedsignals)
           best_recID = recRow.recording;                    
         end
       end
+      
+      recID = vcat(recID,best_recID);
+      recrepDate = vcat(recrepDate,best_recrepDate); 
+      
       if best_recrepDate>300  #arbitrarily using a 300 day max
-        recID = vcat(recID,missing);
-        recrepDate = vcat(recrepDate,best_recrepDate);      
         recMatchStatus = vcat(recMatchStatus,"Match date >300 days different");
       else
-        recID = vcat(recID,best_recID);
-        recrepDate = vcat(recrepDate,best_recrepDate);      
         recMatchStatus = vcat(recMatchStatus,"Matched.");
       end
     end
