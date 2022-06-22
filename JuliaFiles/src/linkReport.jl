@@ -4,7 +4,7 @@
 using StringDistances
 
 function isField(dfname,fldname)
-  if sum(names(dfname).==fldname)>0
+  if sum(names(dfname).==fldname)>0 
     return true
   else
     return false
@@ -24,9 +24,9 @@ function matchReport2Recording(reports,recordings)
   #find closest date
   #see if date is within tolerance specified
   
-  if isField(reports,"pMRN")==false then
+  if isField(reports,"pMRN")==false 
     transorm!(reports,:mgh_pseudo_medical_record_number=>:pMRN);
-  end if
+  end
     
   
   
@@ -36,7 +36,7 @@ function matchReport2Metadata(reports,metareports)
   #match reports df to selection of reports from raw metadata file (for example, routine EEG metadata on gdrive)
   #match requires a field in metareports for pMRN and reportTXT
 
-  if isField(reports,"pMRN")==false then
+  if isField(reports,"pMRN")==false 
     transorm!(reports,:mgh_pseudo_medical_record_number=>:pMRN);
   end
   recID = [];
@@ -45,20 +45,20 @@ function matchReport2Metadata(reports,metareports)
   for row in eachrow(metareports)
     #match pmrn to reports
     temp = filter(:pMRN=>d->d==row.:pMRN,dropmissing(reports,:report_text));
-    if size(temp)[1]==0 then
+    if size(temp)[1]==0 
       recID = vcat(recID,missing);
     else
       bestmatch = length(row.:ReportTXT);
       bestMatchRecID = missing;
       for reprow in eachrow(temp)
         thismatch = OptimalStringAlignment()(reprow.:report_text,row.ReportTXT);
-        if thismatch < bestmatch then
+        if thismatch < bestmatch 
           bestmatch = thismatch;
           bestMatchRecID = reprow.:ID;
         end 
       end
       #if the ID is missing (no match) or the levenshtein distance is greater than 5% then call it missing
-      if ismissing(bestMatchRecID) || bestmatch > 0.05*length(row.ReportTXT) then
+      if ismissing(bestMatchRecID) || bestmatch > 0.05*length(row.ReportTXT) 
         recID = vcat(recID,missing);
       else
         recID = vcat(recID,bestMatchRecID);
