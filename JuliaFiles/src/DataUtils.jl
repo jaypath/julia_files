@@ -119,12 +119,20 @@ function matchReport2Recording(reports,augmentedsignals)
   #to do... write this function :(
   
   #augmentedsignals is recordings of type augmented_signals (has columns for subject, recording ID, recording signals, pMRN, etc
-  #reports here should contain fields pMRN and EncounterDTS (date of encounter) - which may be renamed mgh_encounter
+  #reports here should contain fields pMRN and EncounterDTS (date of encounter) - which may be named mgh_encounter. These fields will renamed if needed
+  
   
   #for each report, match recordings as follows:
   #find all matching pMRN
   #find closest date
   #see if date is within some tolerance
+  
+  if isField(reports,"pMRN")==false 
+    transform!(reports,:mgh_pseudo_medical_record_number=>:pMRN);
+  end
+  if isField(reports,"EncounterDTS")==false 
+    transform!(reports,:mgh_encounter=>:EncounterDTS);
+  end
   
   if isField(augmentedsignals,"pMRN")==false 
     transform!(augmentedsignals,:mgh_pseudo_medical_record_number=>:pMRN);
@@ -139,8 +147,8 @@ function matchReport2Recording(reports,augmentedsignals)
   
   
   for repRow in eachrow(reports)
-  best_recID = missing;
-  best_recrepDate = 10000; #some arbitrarily large number
+    best_recID = missing;
+    best_recrepDate = 10000; #some arbitrarily large number
     #for each report, find a matching pMRN in recordings
     temp = filter(:pMRN=>d->d==repRow.:pMRN,dropmissing(augmentedsignals,:pMRN));
     if size(temp)[1]==0 
@@ -149,16 +157,30 @@ function matchReport2Recording(reports,augmentedsignals)
       recrepDate = vcat(recrepDate,missing);
       recMatchStatus = vcat(recMatchStatus,"report pMRN not found in recordings");
     else
+      #report missing encounterDTS... try mgh_begin
+        
+      best_recrepDate = 99999;
+      best_recID = temp.recording[1];
       for recRow in eachrow(temp)
         #find the rec with the shortest diff between start and encounterDTS
-#        if abs(Dates.value(recRow.:start.date - repRow.:EncounterDTS.date)) < best_recrepDate
-        datedifference = abs(Dates.value(Date(recRow.:start) - Date(repRow.:EncounterDTS,"mm/dd/yyyy")));
-        if  datedifference < best_recrepDate 
+  #        if abs(Dates.value(recRow.start.date - repRow.EncounterDTS.date)) < best_recrepDate
+        if ismissing(repRow.EncounterDTS)
+          datedifference = 99999;
+          if isField(repRow,"mgh_begin") 
+            if ismissing(repRow.mgh_begin)
+              datedifference = 99999;
+            else
+              datedifference = abs(Dates.value(Date(recRow.start) - Date(repRow.mgh_begin,"mm/dd/yyyy")));  
+            end
+          end
+        else
+          datedifference = abs(Dates.value(Date(recRow.start) - Date(repRow.EncounterDTS,"mm/dd/yyyy")));
+        end
+        if  datedifference <= best_recrepDate 
           best_recrepDate = datedifference;
           best_recID = recRow.recording;                    
         end
       end
-      
       recID = vcat(recID,best_recID);
       recrepDate = vcat(recrepDate,best_recrepDate); 
       
@@ -190,18 +212,18 @@ function matchReport2Metadata(reports,metareports)
   #match by pMRN
   for row in eachrow(metareports)
     #match pmrn to reports
-    temp = filter(:pMRN=>d->d==row.:pMRN,dropmissing(reports,:report_text));
+    temp = filter(:pMRN=>d->d==row.pMRN,dropmissing(reports,:report_text));
     if size(temp)[1]==0 
       recID = vcat(recID,missing);
       recMatch = vcat(recMatch,missing);
     else
-      bestmatch = length(row.:ReportTXT);
+      bestmatch = length(row.ReportTXT);
       bestMatchRecID = missing;
       for reprow in eachrow(temp)
-        thismatch = OptimalStringAlignment()(reprow.:report_text,row.ReportTXT);
+        thismatch = OptimalStringAlignment()(reprow.report_text,row.ReportTXT);
         if thismatch < bestmatch 
           bestmatch = thismatch;
-          bestMatchRecID = reprow.:id;
+          bestMatchRecID = reprow.id;
         end 
       end
       #if the ID is missing (no match) or the levenshtein distance is greater than 5% then call it missing
@@ -210,7 +232,7 @@ function matchReport2Metadata(reports,metareports)
         recMatch = vcat(recMatch,missing);
       else
         recID = vcat(recID,bestMatchRecID);
-        recMatch = vcat(recMatch,1-bestmatch/length(row.:ReportTXT));
+        recMatch = vcat(recMatch,1-bestmatch/length(row.ReportTXT));
       end
           
     end
