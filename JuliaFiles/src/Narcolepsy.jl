@@ -19,3 +19,17 @@ recs_narco_2 = unique(filter(:test_type => d -> contains(lowercase(d),"psg"),dro
 subj_narco_1 = unique(recs_narco_1,:subject)
 subj_narco_2 = unique(recs_narco_2,:subject)
 
+hasESS = [];
+
+for NT1row in eachrow(subj_narco_1)
+  tempESS = false;
+  NT1reps = filter(:mgh_pseudo_medical_record_number=>d->isequal(d, NT1row.pMRN),dropmissing(reports,:mgh_pseudo_medical_record_number));
+  for row in eachrow(NT1reps)
+    if ismissing(row.epworth_sleepiness_scale)==false 
+      tempESS=true
+    end    
+  end
+  hasESS = [hasESS tempESS];
+end
+
+subj_narco_1.hasESS = hasESS;
