@@ -1,4 +1,18 @@
-#count MCI and AD studies
+#count the following conditions:
+# MCI
+# AD studies
+# narcolepsy type 1
+#narcolepsy type 2
+#epilepsy, focal G40.1*, G40.2*
+#epilepsy, generalized G40.3*
+#epilepsy, all G40.*
+#parkinsons g20.*
+#schizophrenia F20.*
+# psychosis F28.* F29.*
+# bipolar F31.*
+# mania F30.*
+# depression F33.*
+
 MCI = countByICD("mild cognitive impairment");
 AD = countByICD("alzheimer");
 MCInotAD = antijoin(MCI,AD,on=:subject)
