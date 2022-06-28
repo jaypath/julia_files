@@ -39,15 +39,15 @@ eeg_AD = testType(temp2,"eeg");
 
 psg_MCInotAD = testType(temp3,"psg");
 #psg_MCInotAD_psg_recordings = unique(filter(:test_type => contains(r"psg"i),dropmissing(MCInotAD,:test_type)),:recording;view=true);
-eeg_MCInotAD = testType(temp1,"psg");
+eeg_MCInotAD = testType(temp3,"eeg");
 #MCInotAD_eeg_recordings = unique(filter(:test_type => contains(r"eeg"i),dropmissing(MCInotAD,:test_type)),:recording;view=true);
 
 #NT1
-temp1 = searchByICDcode("g47.411")
+temp1 = searchByICDcode(["347.01","347.11","g47.411"])
 psg_NT1 = testType(temp1,"psg");
 
 #NT2
-temp1 = searchByICDcode("g47.419")
+temp1 = searchByICDcode(["347.00","347.10","g47.419"])
 psg_NT2 = testType(temp1,"psg");
 
 
@@ -88,7 +88,7 @@ temp1 =  searchByICD("major depress");
 eeg_MDD =  testType(temp1,"eeg");
 psg_MDD =  testType(temp1,"psg");
 
-temp1 =  searchByICD(["chronic pain"]);
+temp1 =  searchByICD("chronic pain");
 eeg_pain =  testType(temp1,"eeg");
 psg_pain =  testType(temp1,"psg");
 
