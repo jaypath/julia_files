@@ -1,3 +1,4 @@
+#REV 6/27/2022
 #count the following conditions:
 # MCI
 # AD studies
@@ -41,7 +42,7 @@ epilepsy_all =  searchByICDcode("g40.");
 
 parkinsons =  searchByICDcode("g20.");
 schizophrenia =  searchByICDcode("F20.");
-psychosis =  =  searchByICDcode(["F28.","F29."]);
+psychosis = searchByICDcode(["F28.","F29."]);
 bipolar =  searchByICDcode("F31.");
 mania =  searchByICDcode("F30.");
 depression =  searchByICDcode("F33.");
