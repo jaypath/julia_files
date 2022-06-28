@@ -38,7 +38,7 @@ end
 
 
 
-function checkEachElement(value,arr)
+function occursinArray(value,arr)
   if isa(arr,Array) == false
     if occursin(lowercase(value),lowercase(arr)) 
       return true
@@ -56,7 +56,7 @@ end
 
 function searchByICDcode(searchstring)
     #accepts array of codes
-     icd_term = filter(:code  => d -> checkEachElement(d,searchstring), icds)
+     icd_term = filter(:code  => d -> occursinArray(d,searchstring), icds)
      matches = semijoin(augmented_signals, icd_term; on=:subject)
      return matches;
 end
@@ -64,7 +64,7 @@ end
 function listICDs(searchstring)
   #list icd codes corresponding to the text field/description
   #searchstring may be an array of elments
-  icd_term = filter(:diagnosis => d -> checkEachElement(d,searchstring), icds)  
+  icd_term = filter(:diagnosis => d -> occursinArray(d,searchstring), icds)  
   return unique(icd_term,:code);
 end
 
