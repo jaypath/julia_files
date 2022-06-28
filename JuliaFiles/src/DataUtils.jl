@@ -36,16 +36,35 @@ end
            return matches;
   end
 
-  function searchByICDcode(searchstring)
-           icd_term = filter(:code  => d -> contains(lowercase(d),lowercase(searchstring)), icds)
-           matches = semijoin(augmented_signals, icd_term; on=:subject)
-           return matches;
-  end
 
+
+function checkEachElement(value,arr)
+  if isa(arr,Array) == false
+    if occursin(lowercase(value),lowercase(arr)) 
+      return true
+    end
+
+  else
+    for i in arr
+      if occursin(lowercase(value),lowercase(i)) 
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function searchByICDcode(searchstring)
+    #accepts array of codes
+     icd_term = filter(:code  => d -> checkEachElement(d,searchstring), icds)
+     matches = semijoin(augmented_signals, icd_term; on=:subject)
+     return matches;
+end
 
 function listICDs(searchstring)
   #list icd codes corresponding to the text field/description
-  icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds)  
+  #searchstring may be an array of elments
+  icd_term = filter(:diagnosis => d -> checkEachElement(d,searchstring), icds)  
   return unique(icd_term,:code);
 end
 
