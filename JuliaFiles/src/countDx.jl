@@ -29,17 +29,17 @@ temp1 = searchByICD("mild cognitive impairment");
 temp2 = searchByICD("alzheimer");
 temp3 = antijoin(MCI,AD,on=:subject)
 
-psg_MCI_subjects = testType(temp1,"psg");
-eeg_MCI_subjects = testType(temp1,"eeg");
+psg_MCI = testType(temp1,"psg");
+eeg_MCI = testType(temp1,"eeg");
 
-psg_AD_subjects = testType(temp2,"psg");
+psg_AD = testType(temp2,"psg");
 #psg_AD_psg_recordings = unique(filter(:test_type => contains(r"psg"i),dropmissing(AD,:test_type)),:recording;view=true);
-eeg_AD_subjects = testType(temp2,"eeg");
+eeg_AD = testType(temp2,"eeg");
 #AD_eeg_recordings = unique(filter(:test_type => contains(r"eeg"i),dropmissing(AD,:test_type)),:recording;view=true);
 
-psg_MCInotAD_subjects = testType(temp3,"psg");
+psg_MCInotAD = testType(temp3,"psg");
 #psg_MCInotAD_psg_recordings = unique(filter(:test_type => contains(r"psg"i),dropmissing(MCInotAD,:test_type)),:recording;view=true);
-eeg_MCInotAD_subjects = testType(temp1,"psg");
+eeg_MCInotAD = testType(temp1,"psg");
 #MCInotAD_eeg_recordings = unique(filter(:test_type => contains(r"eeg"i),dropmissing(MCInotAD,:test_type)),:recording;view=true);
 
 #NT1
@@ -58,25 +58,31 @@ temp1 =  searchByICDcode("g40.3");
 eeg_epigen =  testType(temp1,"eeg");
 
 temp1 =  searchByICDcode("g40");
-eeg_epigen =  testType(temp1,"eeg");
+eeg_epiall =  testType(temp1,"eeg");
 
 temp1 =  searchByICDcode("g20");
 eeg_PD =  testType(temp1,"eeg");
+psg_PD =  testType(temp1,"psg");
 
 temp1 =  searchByICDcode("f20");
 eeg_schiz =  testType(temp1,"eeg");
+psg_schiz =  testType(temp1,"psg");
 
 temp1 =  searchByICDcode(["F28","F29"]);
 eeg_psychosis =  testType(temp1,"eeg");
+psg_psychosis =  testType(temp1,"psg");
 
 temp1 =  searchByICDcode("f31");
 eeg_BP =  testType(temp1,"eeg");
+psg_BP =  testType(temp1,"psg");
 
 temp1 =  searchByICDcode("f30");
 eeg_mania =  testType(temp1,"eeg");
+psg_mania =  testType(temp1,"psg");
 
 temp1 =  searchByICDcode("f33");
 eeg_MDD =  testType(temp1,"eeg");
+psg_MDD =  testType(temp1,"psg");
 
 temp1 =  searchByICDcode(["R52","G89"]);
 eeg_pain =  testType(temp1,"eeg");
@@ -85,3 +91,34 @@ psg_pain =  testType(temp1,"psg");
 temp1 =  searchByICDcode("g43");
 eeg_migraine =  testType(temp1,"eeg");
 psg_migraine =  testType(temp1,"psg");
+
+counts = []
+counts = [counts ["eeg_MCInotAD" nrow(eeg_MCInotAD)]];
+counts = [counts ["psg_MCInotAD" nrow(psg_MCInotAD)]];
+counts = [counts ["eeg_MCI" nrow(eeg_MCI)]];
+counts = [counts ["psg_MCI" nrow(psg_MCI)]];
+counts = [counts ["eeg_AD" nrow(eeg_AD)]];
+counts = [counts ["psg_AD" nrow(psg_AD)]];
+counts = [counts ["eeg_epifocal" nrow(eeg_epifocal)]];
+counts = [counts ["eeg_epigen" nrow(eeg_epigen)]];
+counts = [counts ["eeg_epiall" nrow(eeg_epiall)]];
+counts = [counts ["psg_NT1" nrow(psg_NT1)]];
+counts = [counts ["psg_NT2" nrow(psg_NT2)]];
+counts = [counts ["eeg_PD" nrow(eeg_PD)]];
+counts = [counts ["psg_PD" nrow(psg_PD)]];
+counts = [counts ["eeg_schiz" nrow(eeg_schiz)]];
+counts = [counts ["psg_schiz" nrow(psg_schiz)]];
+counts = [counts ["eeg_psychos" nrow(eeg_psychosis)]];
+counts = [counts ["psg_psychosis" nrow(psg_psychosis)]];
+counts = [counts ["eeg_mania" nrow(eeg_mania)]];
+counts = [counts ["psg_mania" nrow(psg_mania)]];
+counts = [counts ["eeg_BP" nrow(eeg_BP)]];
+counts = [counts ["psg_BP" nrow(psg_BP)]];
+counts = [counts ["eeg_MDD" nrow(eeg_MDD)]];
+counts = [counts ["psg_MDD" nrow(psg_MDD)]];
+counts = [counts ["eeg_pain" nrow(eeg_pain)]];
+counts = [counts ["psg_pain" nrow(psg_pain)]];
+counts = [counts ["eeg_migraine" nrow(eeg_migraine)]];
+counts = [counts ["psg_migraine" nrow(psg_migraine)]];
+
+
