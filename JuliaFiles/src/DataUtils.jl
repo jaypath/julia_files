@@ -36,6 +36,21 @@ end
            return matches;
   end
 
+  function searchByICDcode(searchstring)
+           icd_term = filter(:code  => d -> contains(lowercase(d),lowercase(searchstring)), icds)
+           matches = semijoin(augmented_signals, icd_term; on=:subject)
+           return matches;
+  end
+
+
+function listICDs(searchstring)
+  #list icd codes corresponding to the text field/description
+  icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds)  
+  return unique(icd_term,:code);
+end
+
+
+
 function searchReports(searchstring)
     return filter(:report_text => contains(searchstring),dropmissing(reports,:report_text));
 end
