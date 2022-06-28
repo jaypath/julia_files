@@ -40,13 +40,13 @@ end
 
 function occursinArray(value,arr)
   if isa(arr,Array) == false
-    if occursin(lowercase(value),lowercase(arr)) 
+    if occursin(lowercase(arr),lowercase(value)) 
       return true
     end
 
   else
     for i in arr
-      if occursin(lowercase(value),lowercase(i)) 
+      if occursin(lowercase(i),lowercase(value)) 
         return true
       end
     end
