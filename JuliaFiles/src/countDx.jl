@@ -21,7 +21,7 @@ icds = useICD();
 
 
 function testType(dataset,ttype)
-  return unique(filter(:test_type => d -> contains(lowercase(ttype),lowercase(d)),dropmissing(dataset,:test_type)),:subject);
+  return unique(filter(:test_type => d -> contains(lowercase(d),lowercase(ttype)),dropmissing(dataset,:test_type)),:subject);
 end
 
 temp1 = searchByICD("mild cognitive impairment");
@@ -80,6 +80,10 @@ temp1 =  searchByICD("mania");
 eeg_mania =  testType(temp1,"eeg");
 psg_mania =  testType(temp1,"psg");
 
+temp1 =  searchByICD("frontotemporal");
+eeg_FTD =  testType(temp1,"eeg");
+psg_FTD =  testType(temp1,"psg");
+
 temp1 =  searchByICD("major depress");
 eeg_MDD =  testType(temp1,"eeg");
 psg_MDD =  testType(temp1,"psg");
@@ -98,6 +102,8 @@ counts = [counts; ["eeg_MCI" nrow(eeg_MCI)]];
 counts = [counts; ["psg_MCI" nrow(psg_MCI)]];
 counts = [counts; ["eeg_AD" nrow(eeg_AD)]];
 counts = [counts; ["psg_AD" nrow(psg_AD)]];
+counts = [counts; ["eeg_FTD" nrow(eeg_FTD)]];
+counts = [counts; ["psg_FTD" nrow(psg_FTD)]];
 counts = [counts; ["eeg_epifocal" nrow(eeg_epifocal)]];
 counts = [counts; ["eeg_epigen" nrow(eeg_epigen)]];
 counts = [counts; ["eeg_epiall" nrow(eeg_epiall)]];
