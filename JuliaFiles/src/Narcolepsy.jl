@@ -19,6 +19,7 @@ recs_narco_2 = unique(filter(:test_type => d -> contains(lowercase(d),"psg"),dro
 subj_narco_1 = unique(recs_narco_1,:subject)
 subj_narco_2 = unique(recs_narco_2,:subject)
 
+#who has epstein sleepiness?
 hasESS = [];
 
 for NT1row in eachrow(subj_narco_1)
@@ -32,4 +33,4 @@ for NT1row in eachrow(subj_narco_1)
   hasESS = [hasESS tempESS];
 end
 
-subj_narco_1.hasESS = hasESS;
+subj_narco_1.ESS = hasESS;
