@@ -27,7 +27,7 @@ end
 temp1 = searchByICD("mild cognitive impairment");
 
 temp2 = searchByICD("alzheimer");
-temp3 = antijoin(MCI,AD,on=:subject)
+temp3 = antijoin(temp1,temp2,on=:subject)
 
 psg_MCI = testType(temp1,"psg");
 eeg_MCI = testType(temp1,"eeg");
@@ -57,68 +57,67 @@ eeg_epifocal  = testType(temp1,"eeg");
 temp1 =  searchByICDcode("g40.3");
 eeg_epigen =  testType(temp1,"eeg");
 
-temp1 =  searchByICDcode("g40");
+temp1 =  searchByICD("epilepsy");
 eeg_epiall =  testType(temp1,"eeg");
 
-temp1 =  searchByICDcode("g20");
+temp1 =  searchByICD("Parkinson");
 eeg_PD =  testType(temp1,"eeg");
 psg_PD =  testType(temp1,"psg");
 
-temp1 =  searchByICDcode("f20");
+temp1 =  searchByICD("schizophrenia");
 eeg_schiz =  testType(temp1,"eeg");
 psg_schiz =  testType(temp1,"psg");
 
-temp1 =  searchByICDcode(["F28","F29"]);
+temp1 =  searchByICD("psychosis");
 eeg_psychosis =  testType(temp1,"eeg");
 psg_psychosis =  testType(temp1,"psg");
 
-temp1 =  searchByICDcode("f31");
+temp1 =  searchByICD("bipolar");
 eeg_BP =  testType(temp1,"eeg");
 psg_BP =  testType(temp1,"psg");
 
-temp1 =  searchByICDcode("f30");
+temp1 =  searchByICD("mania");
 eeg_mania =  testType(temp1,"eeg");
 psg_mania =  testType(temp1,"psg");
 
-temp1 =  searchByICDcode("f33");
+temp1 =  searchByICD("major depress");
 eeg_MDD =  testType(temp1,"eeg");
 psg_MDD =  testType(temp1,"psg");
 
-temp1 =  searchByICDcode(["R52","G89"]);
+temp1 =  searchByICD(["chronic pain"]);
 eeg_pain =  testType(temp1,"eeg");
 psg_pain =  testType(temp1,"psg");
 
-temp1 =  searchByICDcode("g43");
+temp1 =  searchByICD("migraine");
 eeg_migraine =  testType(temp1,"eeg");
 psg_migraine =  testType(temp1,"psg");
 
-counts = []
-counts = [counts ["eeg_MCInotAD" nrow(eeg_MCInotAD)]];
-counts = [counts ["psg_MCInotAD" nrow(psg_MCInotAD)]];
-counts = [counts ["eeg_MCI" nrow(eeg_MCI)]];
-counts = [counts ["psg_MCI" nrow(psg_MCI)]];
-counts = [counts ["eeg_AD" nrow(eeg_AD)]];
-counts = [counts ["psg_AD" nrow(psg_AD)]];
-counts = [counts ["eeg_epifocal" nrow(eeg_epifocal)]];
-counts = [counts ["eeg_epigen" nrow(eeg_epigen)]];
-counts = [counts ["eeg_epiall" nrow(eeg_epiall)]];
-counts = [counts ["psg_NT1" nrow(psg_NT1)]];
-counts = [counts ["psg_NT2" nrow(psg_NT2)]];
-counts = [counts ["eeg_PD" nrow(eeg_PD)]];
-counts = [counts ["psg_PD" nrow(psg_PD)]];
-counts = [counts ["eeg_schiz" nrow(eeg_schiz)]];
-counts = [counts ["psg_schiz" nrow(psg_schiz)]];
-counts = [counts ["eeg_psychos" nrow(eeg_psychosis)]];
-counts = [counts ["psg_psychosis" nrow(psg_psychosis)]];
-counts = [counts ["eeg_mania" nrow(eeg_mania)]];
-counts = [counts ["psg_mania" nrow(psg_mania)]];
-counts = [counts ["eeg_BP" nrow(eeg_BP)]];
-counts = [counts ["psg_BP" nrow(psg_BP)]];
-counts = [counts ["eeg_MDD" nrow(eeg_MDD)]];
-counts = [counts ["psg_MDD" nrow(psg_MDD)]];
-counts = [counts ["eeg_pain" nrow(eeg_pain)]];
-counts = [counts ["psg_pain" nrow(psg_pain)]];
-counts = [counts ["eeg_migraine" nrow(eeg_migraine)]];
-counts = [counts ["psg_migraine" nrow(psg_migraine)]];
+counts=  ["eeg_MCInotAD" nrow(eeg_MCInotAD)];
+counts = [counts; ["psg_MCInotAD" nrow(psg_MCInotAD)]];
+counts = [counts; ["eeg_MCI" nrow(eeg_MCI)]];
+counts = [counts; ["psg_MCI" nrow(psg_MCI)]];
+counts = [counts; ["eeg_AD" nrow(eeg_AD)]];
+counts = [counts; ["psg_AD" nrow(psg_AD)]];
+counts = [counts; ["eeg_epifocal" nrow(eeg_epifocal)]];
+counts = [counts; ["eeg_epigen" nrow(eeg_epigen)]];
+counts = [counts; ["eeg_epiall" nrow(eeg_epiall)]];
+counts = [counts; ["psg_NT1" nrow(psg_NT1)]];
+counts = [counts; ["psg_NT2" nrow(psg_NT2)]];
+counts = [counts; ["eeg_PD" nrow(eeg_PD)]];
+counts = [counts; ["psg_PD" nrow(psg_PD)]];
+counts = [counts; ["eeg_schiz" nrow(eeg_schiz)]];
+counts = [counts; ["psg_schiz" nrow(psg_schiz)]];
+counts = [counts; ["eeg_psychos" nrow(eeg_psychosis)]];
+counts = [counts; ["psg_psychosis" nrow(psg_psychosis)]];
+counts = [counts; ["eeg_mania" nrow(eeg_mania)]];
+counts = [counts; ["psg_mania" nrow(psg_mania)]];
+counts = [counts; ["eeg_BP" nrow(eeg_BP)]];
+counts = [counts; ["psg_BP" nrow(psg_BP)]];
+counts = [counts; ["eeg_MDD" nrow(eeg_MDD)]];
+counts = [counts; ["psg_MDD" nrow(psg_MDD)]];
+counts = [counts; ["eeg_pain" nrow(eeg_pain)]];
+counts = [counts; ["psg_pain" nrow(psg_pain)]];
+counts = [counts; ["eeg_migraine" nrow(eeg_migraine)]];
+counts = [counts; ["psg_migraine" nrow(psg_migraine)]];
 
 
