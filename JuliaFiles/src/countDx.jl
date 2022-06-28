@@ -13,8 +13,8 @@
 # mania F30.*
 # depression F33.*
 
-MCI = countByICD("mild cognitive impairment");
-AD = countByICD("alzheimer");
+MCI = searchByICD("mild cognitive impairment");
+AD = searchByICD("alzheimer");
 MCInotAD = antijoin(MCI,AD,on=:subject)
 
 MCI_psg_subjects = unique(filter(:test_type => contains(r"psg"i),dropmissing(MCI,:test_type)),:subject;view=true);
@@ -31,3 +31,17 @@ MCInotAD_psg_subjects = unique(filter(:test_type => contains(r"psg"i),dropmissin
 MCInotAD_psg_recordings = unique(filter(:test_type => contains(r"psg"i),dropmissing(MCInotAD,:test_type)),:recording;view=true);
 MCInotAD_eeg_subjects = unique(filter(:test_type => contains(r"eeg"i),dropmissing(MCInotAD,:test_type)),:subject;view=true);
 MCInotAD_eeg_recordings = unique(filter(:test_type => contains(r"eeg"i),dropmissing(MCInotAD,:test_type)),:recording;view=true);
+
+NT1 = searchByICDcode("g47.411")
+NT2 = searchByICDcode("g47.419")
+
+epilepsy_focal =  searchByICDcode(["g40.1","g40.2"]);
+epilepsy_gen =  searchByICDcode("g40.3");
+epilepsy_all =  searchByICDcode("g40.");
+
+parkinsons =  searchByICDcode("g20.");
+schizophrenia =  searchByICDcode("F20.");
+psychosis =  =  searchByICDcode(["F28.","F29."]);
+bipolar =  searchByICDcode("F31.");
+mania =  searchByICDcode("F30.");
+depression =  searchByICDcode("F33.");
