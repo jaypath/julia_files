@@ -13,6 +13,11 @@
 # bipolar F31.*
 # mania F30.*
 # depression F33.*
+# migraine G43.*
+# FTD G31.*
+# chronic pain G89.* and gen pain R52
+
+icds = useICD();
 
 MCI = searchByICD("mild cognitive impairment");
 AD = searchByICD("alzheimer");
@@ -38,11 +43,13 @@ NT2 = searchByICDcode("g47.419")
 
 epilepsy_focal =  searchByICDcode(["g40.1","g40.2"]);
 epilepsy_gen =  searchByICDcode("g40.3");
-epilepsy_all =  searchByICDcode("g40.");
+epilepsy_all =  searchByICDcode("g40");
 
-parkinsons =  searchByICDcode("g20.");
-schizophrenia =  searchByICDcode("F20.");
-psychosis = searchByICDcode(["F28.","F29."]);
-bipolar =  searchByICDcode("F31.");
-mania =  searchByICDcode("F30.");
-depression =  searchByICDcode("F33.");
+parkinsons =  searchByICDcode("g20");
+schizophrenia =  searchByICDcode("F20");
+psychosis = searchByICDcode(["F28","F29"]);
+bipolar =  searchByICDcode("F31");
+mania =  searchByICDcode("F30");
+depression =  searchByICDcode("F33");
+pain = searchByICDcode(["R52","G89"]);
+migraine = searchByICDcode("G43");
