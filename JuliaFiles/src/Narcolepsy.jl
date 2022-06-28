@@ -25,10 +25,14 @@ hasESS = [];
 for NT1row in eachrow(subj_narco_1)
   tempESS = false;
   NT1reps = filter(:mgh_pseudo_medical_record_number=>d->isequal(d, NT1row.pMRN),dropmissing(reports,:mgh_pseudo_medical_record_number));
-  for row in eachrow(NT1reps)
-    if ismissing(row.epworth_sleepiness_scale)==false 
-      tempESS=true
-    end    
+  if nrow(NT1reps) >0
+    for row in eachrow(NT1reps)
+      if ismissing(row.epworth_sleepiness_scale)==false 
+        tempESS=true
+      end    
+    end
+  else
+    tempESS=false
   end
   hasESS = [hasESS tempESS];
 end
