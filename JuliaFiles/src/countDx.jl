@@ -19,6 +19,7 @@
 
 icds = useICD();
 
+
 MCI = searchByICD("mild cognitive impairment");
 AD = searchByICD("alzheimer");
 MCInotAD = antijoin(MCI,AD,on=:subject)
