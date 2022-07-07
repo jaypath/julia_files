@@ -88,7 +88,8 @@ end
 
 
 function searchAugmentedSignalsBySubject(subID)
-    return filter(:subject => contains(subID),dropmissing(augmented_signals,:subject));
+#    return filter(:subject => contains(subID),dropmissing(augmented_signals,:subject));
+      return filter(:subject => d -> d==subID,dropmissing(augmented_signals,:subject));
 end
 
 # MGH-2019 augmented signals table
