@@ -20,6 +20,12 @@ for r in eachrow(races)
   raceCounts_MGHCONTROLS = vcat(raceCounts_MGHCONTROLS,[r.race temp]);
 end
 
+raceCounts_TEST = ["race" "count"];
+for r in eachrow(races)
+  temp = countDF(subset(filter(:race=>d->d==r.race,dropmissing(IEDDA,:race)),:split=>ByRow(isequal(:test))));
+  raceCounts_MGHCONTROLS = vcat(raceCounts_MGHCONTROLS,[r.race temp]);
+end
+
 
 #
 #write back to S3
