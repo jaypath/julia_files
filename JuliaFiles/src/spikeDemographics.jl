@@ -43,10 +43,16 @@ IEDDA.race = temp;
 #now count the unique racial types
 #note: there are some duplicate subjects in the IEDDA table. the results below are study level.
 races = unique(dropmissing(IEDDA,:race),:race);
-raceCounts = ["race" "count"];
+raceCounts_MGHSPIKES = ["race" "count"];
 for r in eachrow(races)
-  temp = countDF(filter(:race=>d->d==r.race,dropmissing(IEDDA,:race)));
-  raceCounts = vcat(raceCounts,[r.race temp]);
+  temp = countDF(subset(filter(:race=>d->d==r.race,dropmissing(IEDDA,:race)),:dataset=>ByRow(isequal("mgh_spikes"))));
+  raceCounts_MGHSPIKES = vcat(raceCounts_MGHSPIKES,[r.race temp]);
+end
+
+raceCounts_MGHCONTROLS = ["race" "count"];
+for r in eachrow(races)
+  temp = countDF(subset(filter(:race=>d->d==r.race,dropmissing(IEDDA,:race)),:dataset=>ByRow(isequal("mgh_controls"))));
+  raceCounts_MGHCONTROLS = vcat(raceCounts_MGHCONTROLS,[r.race temp]);
 end
 
 
