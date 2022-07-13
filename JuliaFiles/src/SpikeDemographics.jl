@@ -7,6 +7,8 @@ IEDDA = DataFrame(Arrow.Table(path); copycols=true);
 
 # count the unique racial types
 #note: there are some duplicate subjects in the IEDDA table. the results below are study level.
+
+#counts for the spikes dataset
 races = unique(dropmissing(IEDDA,:race),:race);
 raceCounts_MGHSPIKES = ["race" "count"];
 for r in eachrow(races)
@@ -14,16 +16,18 @@ for r in eachrow(races)
   raceCounts_MGHSPIKES = vcat(raceCounts_MGHSPIKES,[r.race temp]);
 end
 
+#counts for the controls dataset
 raceCounts_MGHCONTROLS = ["race" "count"];
 for r in eachrow(races)
   temp = countDF(subset(filter(:race=>d->d==r.race,dropmissing(IEDDA,:race)),:dataset=>ByRow(isequal(:mgh_controls))));
   raceCounts_MGHCONTROLS = vcat(raceCounts_MGHCONTROLS,[r.race temp]);
 end
 
+#counts for the test split
 raceCounts_TEST = ["race" "count"];
 for r in eachrow(races)
   temp = countDF(subset(filter(:race=>d->d==r.race,dropmissing(IEDDA,:race)),:split=>ByRow(isequal(:test))));
-  raceCounts_MGHCONTROLS = vcat(raceCounts_MGHCONTROLS,[r.race temp]);
+  raceCounts_TEST = vcat(raceCounts_TEST,[r.race temp]);
 end
 
 
