@@ -8,6 +8,11 @@ IEDDA = DataFrame(Arrow.Table(path); copycols=true);
 # count the unique racial types
 #note: there are some duplicate subjects in the IEDDA table. the results below are study level.
 
+
+function countDF(df::DataFrame)
+  return size(df)[1]
+end
+
 #counts for the spikes dataset
 races = unique(dropmissing(IEDDA,:race),:race);
 raceCounts_MGHSPIKES = ["race" "count"];
