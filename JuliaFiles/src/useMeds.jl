@@ -1,6 +1,7 @@
 using AWS
 using AWSS3
 using Scratch
+using Arrow
 
 const MEDICATIONS_ARROW_TABLE_ORIGIN = "s3://project-jasper-sandbox/eph-sandbox/all_meds_data.arrow"
 
