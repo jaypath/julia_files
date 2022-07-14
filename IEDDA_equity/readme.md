@@ -7,3 +7,7 @@ Question: Is IEDDA racially biased?
 To do:
 
 -[x] assess the racial distribution of IEDDA training set
+
+
+-[ ] make 10 IEDDA data splits, balanced for races
+
