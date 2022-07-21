@@ -36,8 +36,26 @@ end
            return matches;
   end
 
+function EZfilterIsEq(df,columnname,searchval)
+  return filter(columnname=>d->isequal(d,searchval),dropmissing(df,columnname))
+end
+function EZfilterIsIn(df,columnname,searchval)
+  return filter(columnname=>d->contains(d,searchval),dropmissing(df,columnname))
+end
 
+function EZfilterIsEqArr(df,columnname,searchArr, searchCol)
+  temp = DataFrame;
+  for i in searchArr
+    temp2 = filter(columnname=>d->isequal(d,searchArr[i,searchCol]),dropmissing(df,columnname))        
+    temp = vcat(temp, temp2)
+  end
+  return temp
+end
+    
 
+    
+
+  
 function occursinArray(value,arr)
   if isa(arr,Array) == false
     if occursin(lowercase(arr),lowercase(value)) 
