@@ -45,8 +45,8 @@ end
 
 function EZfilterIsEqArr(df,columnname,searchArr, searchCol)
   temp = DataFrame;
-  for i in searchArr
-    temp2 = filter(columnname=>d->isequal(d,searchArrsearchCol[i]),dropmissing(df,columnname))        
+  for i in eachrow(searchArr)
+    temp2 = filter(columnname=>d->isequal(d,searchArr[!,searchCol][i]),dropmissing(df,columnname))        
     temp = vcat(temp, temp2)
   end
   return temp
