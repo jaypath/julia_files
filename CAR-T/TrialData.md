@@ -2,10 +2,6 @@ See the raw file here:
 https://beaconbio.sharepoint.com/:x:/s/BeaconJunkDrawer/Ef-MKUB-NGdJpGsx1imJ6RoBT98VlNw6gEqqnjFiVfIwRg?e=VoajDV
 
 for details, but in summary:
-subjects who wore spotlite prior to encephalopathy: 4, 103
-subjects who wore spotlite day of onset: 5
-
-subject summary
 |subject|max ICANS|data pre-enceph|data day-of|
 |---|---|---|---|
 |1|0|o|o|
