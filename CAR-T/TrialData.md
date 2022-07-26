@@ -24,7 +24,7 @@ Clinical EEG if ICANS > 0		2
 Therefore, subjects who wore spotlite prior to encephalopathy:
 4, 103
 
-subjects who wore spitlite day of onset
+subjects who wore spotlite day of onset
 5
 
 subject and max icans
