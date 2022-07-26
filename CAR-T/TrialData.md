@@ -8,18 +8,18 @@ subjects who wore spotlite day of onset: 5
 subject summary
 |subject|max ICANS|data pre-enceph|data day-of|
 |---|---|---|---|
-|1|0|x|x|
-|2|0|x|x|
-|3|0|x|x|
-|4|1|Y|x|
-|5|3|x|Y|
-|6|0|x|x|
-|101|0|x|x|
-|102|0|x|x|
-|103|3|Y|x|
-|104|0|x|x|
-|105|x|x|x|
-|106|2|x|x|
+|1|0|o|o|
+|2|0|o|o|
+|3|0|o|o|
+|4|1|Y|o|
+|5|3|o|Y|
+|6|0|o|o|
+|101|0|o|o|
+|102|0|o|o|
+|103|3|Y|o|
+|104|0|o|o|
+|105|x|o|o|
+|106|2|o|o|
 
 Jay's notes:
 not clear why 106, who has max icans of 2, did not have pre or day-of enceph... wore spotlite AFTER enceph??
