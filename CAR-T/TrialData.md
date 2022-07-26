@@ -1,36 +1,17 @@
-See the raw file for details, but in summary:
-	SID	LOS (after infusion)	Mean Per Day When Worn			CRS>0	MaxICANS	Total Days Worn	Worn Day Prior	Worn Day of Onset	Total Days while ICANS >0	Days of Clinical EEG 	Total Days refused			Comments
-	1	9				1	0	9	na	na	na					
-	2	14				1	0	7	na	na	na		7			skin irritation
-	3	13				TBD	0	13	na	na	na					
-	4	9				1	1	5	1	0	0		4			
-	5	14				1	3	7	0	1	1	3	7			
-	6	10				TBD	0	10	na	na	na					
-	101	12				2	0	12	na	na	na		0			lots of walking & disconnection issues
-	102	14				2	0	7	na	na	na		7			refused assessment & spotlite after day 8
-	103	13				2	3	8	1	0	3	1	5			
-	104	7				1	0	5	na	na	na		2			
-	105	withdrew														withdrew after day 1
-	106	14				2	2	8	0	0	0	0	6			
+See the raw file here:
+https://beaconbio.sharepoint.com/:x:/s/BeaconJunkDrawer/Ef-MKUB-NGdJpGsx1imJ6RoBT98VlNw6gEqqnjFiVfIwRg?e=VoajDV
 
-
-Total Patients		10
-Total Patients ICANS > 0		4
-Day of Onset if ICANS		1
-Day Prior if ICANS > 0		2
-Worn at all while ICANS >0		2
-Clinical EEG if ICANS > 0		2
-
-Therefore, subjects who wore spotlite prior to encephalopathy:
-4, 103
-
-subjects who wore spotlite day of onset
-5
+for details, but in summary:
+subjects who wore spotlite prior to encephalopathy: 4, 103
+subjects who wore spotlite day of onset: 5
 
 subject and max icans
-4 - 1
-5 - 3
-103 - 3
+|subject|max ICANS|
+|---|---|
+|4|1|
+|5|3|
+|103|3|
+
 
 Jay's notes:
 subject 5 - many files with no data. listed are the only valid files - and they have noise at ~28 Hz... the remaining files contain noise only.
