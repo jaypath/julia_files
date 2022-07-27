@@ -37,3 +37,6 @@ subject 5 - many files with no data. listed are the only valid files - and they 
 |103|2021-10-24|15:13|https://portal.beacon.bio/viewer/project/dc6aa500-26ad-4395-821c-83ecbecafcbd/cfac3432-bfb3-478f-8809-c6e111cf7ed4|
 |103|2021-10-24|16:47|https://portal.beacon.bio/viewer/project/dc6aa500-26ad-4395-821c-83ecbecafcbd/6dd8ab60-e9d3-438f-9110-8cfc63e70baa|
 |103|2021-10-23|00:02|https://portal.beacon.bio/viewer/project/dc6aa500-26ad-4395-821c-83ecbecafcbd/c157afb9-c0b7-49dd-a2c7-810506660518|
+
+
+Subjects 1 and 106 could be used as controls
