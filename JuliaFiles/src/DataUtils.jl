@@ -40,7 +40,7 @@ function EZfilterIsEq(df,columnname,searchval)
   return filter(columnname=>d->isequal(d,searchval),dropmissing(df,columnname))
 end
 function EZfilterIsIn(df,columnname,searchval)
-  return filter(columnname=>d->contains(d,searchval),dropmissing(df,columnname))
+  return filter(columnname=>d->contains(lowercase(d),lowercase(searchval)),dropmissing(df,columnname))
 end
 
 function EZfilterIsEqArr(df,columnname,searchArr, searchCol)
