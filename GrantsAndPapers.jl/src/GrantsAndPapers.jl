@@ -87,6 +87,12 @@ function listICDs(searchstring)
 end
 
 
+function commonToBoth(set1,set2)
+#search two dataframes for the set that is common to both [inner join]
+      return innerjoin(set1,set2,on=:subject)
+      
+end
+    
 
 function searchReports(searchstring)
     return filter(:report_text => contains(searchstring),dropmissing(reports,:report_text));
