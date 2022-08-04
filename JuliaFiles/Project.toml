@@ -1,0 +1,18 @@
+name = "GrantsAndPapers"
+uuid = "afa6d234-73a0-4c7d-a5c6-74daf41a6783"
+authors = ["Beacon Biosignals, Inc."]
+version = "0.1.0"
+
+[deps]
+AWS = "fbe9abb3-538b-5e4e-ba9e-bc94f4f92ebc"
+AWSS3 = "1c724243-ef5b-51ab-93f4-b0a88ac62a95"
+Arrow = "69666777-d1a9-59fb-9406-91d4454c9d45"
+BOME = "53adea44-13f2-4c70-befc-b79c90f2784f"
+BeaconPlots = "e1036b53-a507-438e-bf43-b0476112e9fd"
+CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+Scratch = "6c6a2e73-6563-6170-7368-637461726353"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+TimeSpans = "bb34ddd2-327f-4c4a-bfb0-c98fc494ece1"
+UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
