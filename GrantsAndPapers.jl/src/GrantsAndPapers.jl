@@ -21,20 +21,11 @@ read_with(reader, file::AbstractString) = read_with(reader, joinpath(MGH_ROOT, f
 
 
 #function to count recordings by ICD term
-function useICD()
-  return Mgh2019Utils.load(; schema="bome.icd-code@1");
-  
-end
 
 function useReports()
   return Mgh2019Utils.load(; schema="bome.report@1");
 end
 
-  function searchByICD(searchstring)
-           icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds)
-           matches = semijoin(augmented_signals, icd_term; on=:subject)
-           return matches;
-  end
 
 function EZfilterIsEq(df,columnname,searchval)
   return filter(columnname=>d->isequal(d,searchval),dropmissing(df,columnname))
@@ -79,7 +70,20 @@ function searchByICDcode(searchstring)
      return matches;
 end
 
-function listICDs(searchstring)
+function useICD()
+  return Mgh2019Utils.load(; schema="bome.icd-code@1");
+  
+end
+
+
+  function searchByICD(searchstring)
+           icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds)
+           matches = semijoin(augmented_signals, icd_term; on=:subject)
+           return matches;
+  end
+
+
+    function listICDs(searchstring)
   #list icd codes corresponding to the text field/description
   #searchstring may be an array of elments
   icd_term = filter(:diagnosis => d -> occursinArray(d,searchstring), icds)  
