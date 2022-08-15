@@ -83,9 +83,9 @@ end
   end
 
 
-  function searchByNotICD(searchstring)
+  function searchByNotICD(searchstring,sigTable)
            icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds)
-           matches = antijoin(augmented_signals, icd_term; on=:subject)
+           matches = antijoin(sigTable, icd_term; on=:subject)
            return matches;
   end
 
