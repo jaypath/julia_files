@@ -83,6 +83,15 @@ end
   end
 
 
+  function searchByNotICD(searchstring)
+           icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds)
+           matches = antijoin(augmented_signals, icd_term; on=:subject)
+           return matches;
+  end
+
+
+    
+    
     function listICDs(searchstring)
   #list icd codes corresponding to the text field/description
   #searchstring may be an array of elments
