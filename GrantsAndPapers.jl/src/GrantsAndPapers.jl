@@ -76,10 +76,14 @@ function useICD()
 end
 
 
-  function searchByICD(searchstring)
+  function searchByICD(searchstring,sigTable="")
            icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds)
-           matches = semijoin(augmented_signals, icd_term; on=:subject)
-           return matches;
+      if sigTable == ""
+          matches = semijoin(augmented_signals, icd_term; on=:subject)
+      else
+          matches = semijoin(sigTable, icd_term; on=:subject)
+      end
+        return matches;
   end
 
 
