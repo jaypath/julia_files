@@ -93,7 +93,7 @@ end
 
   function searchByICD(searchstring,sigTable="")
     #accepts array of terms
-           icd_term = filter(:diagnosis => d -> containsInArray(lowercase(d),lowercase(searchstring)), icds)
+           icd_term = filter(:diagnosis => d -> containsInArray(lowercase(d),searchstring), icds)
       if sigTable == ""
           matches = semijoin(augmented_signals, icd_term; on=:subject)
       else
