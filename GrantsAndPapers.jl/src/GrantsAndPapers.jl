@@ -93,7 +93,7 @@ end
 
   function searchByICD(searchstring,sigTable="")
     #accepts array of terms
-           icd_term = filter(:diagnosis => d -> containsInArray(lowercase(d),searchstring), icds)
+           icd_term = filter(:diagnosis => d -> containsinArray(lowercase(d),searchstring), icds)
       if sigTable == ""
           matches = semijoin(augmented_signals, icd_term; on=:subject)
       else
@@ -334,6 +334,13 @@ function matchReport2Metadata(reports,metareports)
   metareports[!,:reportMatchPcnt]=recMatch;
   return metareports
 end
+
+function testType(sigtable,testname)
+      temp = filter(:test_type=>d->occursin(lowercase(testname),d),dropmissing(unique(sigtable,:recording),:test_type))
+      
+      return sigtable
+end
+    
 
 signals = read_with(read_bome_table, "all.mgh-2019.onda.signals.arrow")
 
