@@ -45,6 +45,21 @@ end
     
 
     
+function containsinArray(value,arr)
+  if isa(arr,Array) == false
+    if contains(lowercase(arr),lowercase(value)) 
+      return true
+    end
+
+  else
+    for i in arr
+      if contains(lowercase(i),lowercase(value)) 
+        return true
+      end
+    end
+  end
+  return false
+end
 
   
 function occursinArray(value,arr)
@@ -77,7 +92,8 @@ end
 
 
   function searchByICD(searchstring,sigTable="")
-           icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds)
+    #accepts array of terms
+           icd_term = filter(:diagnosis => d -> containsInArray(lowercase(d),lowercase(searchstring)), icds)
       if sigTable == ""
           matches = semijoin(augmented_signals, icd_term; on=:subject)
       else
