@@ -336,9 +336,8 @@ function matchReport2Metadata(reports,metareports)
 end
 
 function testType(sigtable,testname)
-      temp = filter(:test_type=>d->occursin(lowercase(testname),d),dropmissing(unique(sigtable,:recording),:test_type))
+      return filter(:test_type=>d->occursin(lowercase(testname),d),dropmissing(unique(sigtable,:recording),:test_type))
       
-      return sigtable
 end
     
 
