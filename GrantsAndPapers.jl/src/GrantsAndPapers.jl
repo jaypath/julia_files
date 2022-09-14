@@ -48,6 +48,21 @@ function useMeds()
   end
   return medications
 end
+
+function recordingsOnMeds(medname, sigtable = "")
+  #medname may be an array of meds
+
+  
+  temp =  filter(:MedicationDSC=> d -> containsinArray(lowercase(d),medname),dropmissing(meds,:MedicationDSC))  
+        if sigTable == ""
+          matches = semijoin(augmented_signals, temp; on=:pMRN)
+      else
+          matches = semijoin(sigtable, temp; on=:pMRN)
+      end
+        return matches;
+
+end
+
   
   
   
