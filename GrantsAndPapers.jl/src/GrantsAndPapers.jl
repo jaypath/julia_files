@@ -27,8 +27,8 @@ function useReports()
 end
 
 function useMeds()
-  const MEDICATIONS_ARROW_TABLE_ORIGIN = "s3://project-jasper-sandbox/eph-sandbox/all_meds_data.arrow"
-const MEDICATIONS_ARROW_TABLE_PATH = joinpath(@get_scratch!("MGH2019-medications"),
+   MEDICATIONS_ARROW_TABLE_ORIGIN = "s3://project-jasper-sandbox/eph-sandbox/all_meds_data.arrow"
+ MEDICATIONS_ARROW_TABLE_PATH = joinpath(@get_scratch!("MGH2019-medications"),
                                               "jasper-eph-sandbox-all-meds-data.arrow")
     # File is pretty large. I had trouble loading it directly from S3
     # Copying it to local disk seems to work better
