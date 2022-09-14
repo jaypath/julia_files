@@ -54,7 +54,7 @@ function recordingsOnMeds(medname, sigtable = "")
 
   
   temp =  filter(:MedicationDSC=> d -> containsinArray(lowercase(d),medname),dropmissing(meds,:MedicationDSC))  
-        if sigTable == ""
+        if sigtable == ""
           matches = semijoin(augmented_signals, temp; on=:pMRN)
       else
           matches = semijoin(sigtable, temp; on=:pMRN)
