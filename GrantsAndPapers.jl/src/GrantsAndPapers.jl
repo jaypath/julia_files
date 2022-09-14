@@ -53,7 +53,7 @@ function recordingsOnMeds(medname, sigtable = "")
   #medname may be an array of meds
 
   
-  temp =  filter(:MedicationDSC=> d -> containsinArray(lowercase(d),medname),dropmissing(meds,:MedicationDSC))  
+  temp =  listMeds(medname)  
         if sigtable == ""
           matches = semijoin(augmented_signals, temp; on=:pMRN)
       else
@@ -63,7 +63,13 @@ function recordingsOnMeds(medname, sigtable = "")
 
 end
 
+function listMeds(medname)
+  #medname may be an array of meds
+
   
+  return  filter(:MedicationDSC=> d -> occursinArray(lowercase(d),medname),dropmissing(meds,:MedicationDSC))  
+
+end  
   
   
   
@@ -86,22 +92,6 @@ function EZfilterIsEqArr(df,columnname,searchArr, searchCol)
 end
     
 
-    
-function containsinArray(value,arr)
-  if isa(arr,Array) == false
-    if contains(lowercase(arr),lowercase(value)) 
-      return true
-    end
-
-  else
-    for i in arr
-      if contains(lowercase(i),lowercase(value)) 
-        return true
-      end
-    end
-  end
-  return false
-end
 
   
 function occursinArray(value,arr)
@@ -135,7 +125,7 @@ end
 
   function searchByICD(searchstring,sigTable="")
     #accepts array of terms
-           icd_term = filter(:diagnosis => d -> containsinArray(lowercase(d),searchstring), icds)
+      icd_term = filter(:diagnosis => d -> occursinArray(lowercase(d),searchstring), icds)
       if sigTable == ""
           matches = semijoin(augmented_signals, icd_term; on=:subject)
       else
@@ -146,7 +136,7 @@ end
 
 
   function searchByNotICD(searchstring,sigTable)
-           icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds)
+           icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds) #contains(hastack,needle)
            matches = antijoin(sigTable, icd_term; on=:subject)
            return matches;
   end
