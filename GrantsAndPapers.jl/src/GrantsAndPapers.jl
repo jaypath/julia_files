@@ -1,6 +1,6 @@
 #this file loads subjects, recordings, ICDs (optional), and signals tables
 
-using DataFrames, DataMapUtils, Mgh2019Utils, AWSS3, BOME, Dates, Scratch
+using DataFrames, DataMapUtils, Mgh2019Utils, AWSS3, BOME, Dates, Scratch, Arrow
 
 recordings = Mgh2019Utils.load(; schema="bome.recording@1");
 persons = Mgh2019Utils.load(; schema="bome.person@1");
@@ -26,6 +26,7 @@ function useReports()
   return Mgh2019Utils.load(; schema="bome.report@1");
 end
 
+
 function useMeds()
    MEDICATIONS_ARROW_TABLE_ORIGIN = "s3://project-jasper-sandbox/eph-sandbox/all_meds_data.arrow"
  MEDICATIONS_ARROW_TABLE_PATH = joinpath(@get_scratch!("MGH2019-medications"),
@@ -38,7 +39,7 @@ function useMeds()
     end
   medications = let
       # Medications is very large table. `copycols=false` helps to reduce memory usage
-      df = DataFrame(Arrow.Table(load_in_meds()); copycols=false)
+      df = DataFrame(Arrow.Table(MEDICATIONS_ARROW_TABLE_PATH); copycols=false)
       select!(df, :OrderInstantDTS, :MedicationDSC, :pMRN)
       clean_df = dropmissing(df, [:MedicationDSC, :pMRN]) # Bare-minimum columns
       # Set `:MedicationDSC` column to uppercase to help with matching descriptions
