@@ -1,6 +1,6 @@
 #this file loads subjects, recordings, ICDs (optional), and signals tables
 
-using DataFrames, DataMapUtils, Mgh2019Utils, AWSS3, BOME, Dates
+using DataFrames, DataMapUtils, Mgh2019Utils, AWSS3, BOME, Dates, Scratch
 
 recordings = Mgh2019Utils.load(; schema="bome.recording@1");
 persons = Mgh2019Utils.load(; schema="bome.person@1");
@@ -27,7 +27,6 @@ function useReports()
 end
 
 function useMeds()
-  using Scratch # Medications Data in Scratch space
   const MEDICATIONS_ARROW_TABLE_ORIGIN = "s3://project-jasper-sandbox/eph-sandbox/all_meds_data.arrow"
 const MEDICATIONS_ARROW_TABLE_PATH = joinpath(@get_scratch!("MGH2019-medications"),
                                               "jasper-eph-sandbox-all-meds-data.arrow")
