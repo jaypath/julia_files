@@ -367,6 +367,22 @@ function matchReport2Metadata(reports,metareports)
   return metareports
 end
 
+function countDF(df)
+  stro = "";
+  pcnt = [];
+  dfu = unique(df);
+  for i in dfu
+    tmpcnt = sum(df.===i);
+    stro = stro * string(i) * "=" * string(tmpcnt) * "\n"
+    pcnt = vcat(pcnt,tmpcnt);
+  end
+  print(stro)
+  pcnt = pcnt./sum(pcnt);
+  return pcnt
+end
+    
+    
+    
 function testType(sigtable,testname = "")
       if testname == ""
         return "EEGs: " * string(size(filter(:test_type=>d->occursin(lowercase("eeg"),d),dropmissing(unique(sigtable,:recording),:test_type)))[1]) * "; PSGs: " * string(size(filter(:test_type=>d->occursin(lowercase("psg"),d),dropmissing(unique(sigtable,:recording),:test_type)))[1])
