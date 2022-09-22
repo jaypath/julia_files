@@ -110,10 +110,14 @@ function occursinArray(value,arr)
   return false
 end
 
-function searchByICDcode(searchstring)
+function searchByICDcode(searchstring,sigtable = "")
     #accepts array of codes
      icd_term = filter(:code  => d -> occursinArray(d,searchstring), icds)
-     matches = semijoin(augmented_signals, icd_term; on=:subject)
+      if sigTable == ""
+          matches = semijoin(augmented_signals, icd_term; on=:subject)
+      else
+          matches = semijoin(sigTable, icd_term; on=:subject)
+      end
      return matches;
 end
 
