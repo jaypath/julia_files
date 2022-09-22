@@ -110,7 +110,7 @@ function occursinArray(value,arr)
   return false
 end
 
-function searchByICDcode(searchstring,sigtable = "")
+function searchByICDcode(searchstring,sigTable = "")
     #accepts array of codes
      icd_term = filter(:code  => d -> occursinArray(d,searchstring), icds)
       if sigTable == ""
