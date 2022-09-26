@@ -144,17 +144,19 @@ end
            matches = antijoin(sigTable, icd_term; on=:subject)
            return matches;
   end
-
-
     
     
-    function listICDs(searchstring)
+function listICDs(searchstring)
   #list icd codes corresponding to the text field/description
   #searchstring may be an array of elments
   icd_term = filter(:diagnosis => d -> occursinArray(d,searchstring), icds)  
   return unique(icd_term,:code);
 end
 
+function searchRecICD(searchstring, recording)
+  pMRN = filter(:recording => d -> d == recording, augmented_signals).pMRN[1];
+  return subset(icds, :diagnosis => ByRow(d->contains(lowercase(d),lowercase(searchstring))), :mgh_pseudo_medical_record_number => ByRow(e->e==pMRN); skipmissing=true);
+end
 
 function commonToBoth(set1,set2)
 #search two dataframes for the set that is common to both [inner join]
