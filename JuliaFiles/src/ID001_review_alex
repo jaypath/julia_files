@@ -1,5 +1,5 @@
 #Alex's code
-#weirdly demonstrates 50% are known insomniac... why does my code come up with a smaller #???
+#demonstrates 50% are known insomniac... but my code come up with a smaller #. Reason is that I use only ICDs, and alex uses ICD + questionnaire. When I run ICD only on this table I get the same results (good).
 
 using AWSS3, Arrow, DataFrames
 
