@@ -1,0 +1,41 @@
+#Alex's code
+#weirdly demonstrates 50% are known insomniac... why does my code come up with a smaller #???
+
+using AWSS3, Arrow, DataFrames
+
+function read_mgh_table(name)
+    path = S3Path("s3://beacon-curated-datasets/onda/mgh-2019/$name.arrow")
+    return DataFrame(Arrow.Table(path))
+end
+
+recordings = read_mgh_table("all.mgh-2019.bome.recordings")
+
+icd = vcat(read_mgh_table("all.mgh-2019.bome.icd-9"),
+           read_mgh_table("all.mgh-2019.bome.icd-10"))
+unique!(icd)
+subset!(icd, :diagnosis => ByRow(dx -> occursin(r"insomn"i, dx)))
+
+subjective_cols = [:eval_for_sleepiness, :eval_for_insomnia,
+                   :trouble_falling_asleep, :trouble_staying_asleep,
+                   :tired_no_matter_how_much_sleep,
+                   :feel_sleepy_no_matter_how_much_sleep, :fall_asleep_more60, :wake_up_more3,
+                   :poor_sleep_impact_little, :poor_sleep_impact_somewhat, :poor_sleepimpact_a_lot,
+                   :sleepiness_or_fatigue_sleepiness, :sleepiness_or_fatigue_fatigue, :sleepiness_or_fatigue_both]
+presleep = read_mgh_table("presleep-questionnaire.mgh-2019.bome.reports")
+presleep = subset(presleep,
+                  subjective_cols => ByRow((cols...) -> any(c -> coalesce(c, false), cols)))
+
+# "Known" insomniacs, i.e. subjects objectively meeting criteria for subjective insomnia.
+# This is over the whole of MGH; it's not filtered by who has a PSG.
+known_insomniacs = Set(vcat(icd.subject, presleep.subject))
+
+features = DataFrame(Arrow.Table(S3Path("project-id-001-sandbox",
+                                        "aim2/objective_fco_features_with_predictions.arrow";
+                                        version="WxW0scoWbaaXGDgy3K6SyCDI2ztCRrfG")))
+features = subset(features, :dataset => ByRow(==("mgh")), :group => ByRow(==("insomniac"));
+                  skipmissing=true)
+features = innerjoin(select(recordings, :id => :recording, :subject), features;
+                     on=:recording)
+                     
+transform!(features, :subject => ByRow(in(known_insomniacs)) => :is_known_insomniac)
+
