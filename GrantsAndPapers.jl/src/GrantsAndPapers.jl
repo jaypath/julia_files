@@ -110,15 +110,20 @@ function occursinArray(value,arr)
   return false
 end
 
-function searchByICDcode(searchstring,sigTable = "")
+function searchByICDcode(searchstring,sigTable = "",makeunique = true)
     #accepts array of codes
-     icd_term = filter(:code  => d -> occursinArray(d,searchstring), icds)
+     icd_term = subset(icds, :code => ByRow(d -> occursinArray(lowercase(d),lowercase(searchstring)));skipmissing=true);
+#      filter(:code  => d -> occursinArray(d,searchstring), icds)
       if sigTable == ""
           matches = semijoin(augmented_signals, icd_term; on=:subject)
       else
           matches = semijoin(sigTable, icd_term; on=:subject)
       end
-     return matches;
+      if makeunique
+         return unique(matches,:recording);
+      else
+         return matches;
+      end
 end
 
 function useICD()
@@ -127,15 +132,20 @@ function useICD()
 end
 
 
-  function searchByICD(searchstring,sigTable="")
+  function searchByICD(searchstring,sigTable="",makeunique = true)
     #accepts array of terms
-      icd_term = filter(:diagnosis => d -> occursinArray(lowercase(d),searchstring), icds)
+      icd_term = subset(icds,:diagnosis => ByRow(d -> occursinArray(lowercase(d),lowercase(searchstring)));skipmissing=true)
       if sigTable == ""
           matches = semijoin(augmented_signals, icd_term; on=:subject)
       else
           matches = semijoin(sigTable, icd_term; on=:subject)
       end
-        return matches;
+      
+      if makeunique
+         return unique(matches,:recording);
+      else
+         return matches;
+      end
   end
 
 
@@ -147,15 +157,21 @@ end
     
     
 function listICDs(searchstring)
-  #list icd codes corresponding to the text field/description
+  #list icd diagnoses (not necessarily codes) corresponding to the text field/description
   #searchstring may be an array of elments
   icd_term = filter(:diagnosis => d -> occursinArray(d,searchstring), icds)  
-  return unique(icd_term,:code);
+  return unique(icd_term,:diagnosis);
 end
 
-function searchRecICD(searchstring, recording)
-  pMRN = filter(:recording => d -> d == recording, augmented_signals).pMRN[1];
-  return subset(icds, :diagnosis => ByRow(d->contains(lowercase(d),lowercase(searchstring))), :mgh_pseudo_medical_record_number => ByRow(e->e==pMRN); skipmissing=true);
+function searchRecICD(recordings,searchstring = "")
+  #return the ICDs for a given set of recordings. If searchstring is empty, then all ICDs returned.
+  
+  subjUUID = unique(recordings,:subject);
+  if searchstring == ""
+    return unique(subset(icds, :subject => ByRow(s->s in subjUUID.subject); skipmissing=true));
+  else
+    return unique(subset(icds, :subject => ByRow(s->s in subjUUID.subject), :diagnosis=>ByRow(d-> occursin(lowercase(searchstring),lowercase(d))); skipmissing=true));
+  end      
 end
 
 function commonToBoth(set1,set2)
