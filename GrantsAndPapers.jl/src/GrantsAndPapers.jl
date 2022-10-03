@@ -72,7 +72,9 @@ function listMeds(medname)
 end  
   
   
-  
+function binThisDF(df,col)
+  return sort(combine(groupby(df,col),col=>length=>:num),:num,rev=true)
+end
 
 
 function EZfilterIsEq(df,columnname,searchval)
