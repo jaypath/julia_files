@@ -73,6 +73,7 @@ end
   
   
 function binThisDF(df,col)
+  #Return counts of elements in cols
   return sort(combine(groupby(df,col),col=>length=>:num),:num,rev=true)
 end
 
