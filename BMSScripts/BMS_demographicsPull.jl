@@ -21,7 +21,7 @@ AD_data = dropmissing(unique(recordsWithDXandICD("",unique(AD,:code).code),:reco
 AD_data = subset(AD_data,:age_in_years=>ByRow(a->a>ageMin && a<ageMax);skipmissing=true); #by recording, and min age
 
 #exclude 
-exclusionDXs = ["stroke","alcohol","substance","encephalitis","Creutzfeldt","multiple sclerosis","brain tumor","neoplasm of brain","schizophrenia","glioblastoma","glioma","astrocytoma","cirrhosis","renal failure"];
+exclusionDXs = ["vascular dementia","stroke","alcohol","substance","encephalitis","Creutzfeldt","multiple sclerosis","brain tumor","neoplasm of brain","schizophrenia","glioblastoma","glioma","astrocytoma","cirrhosis","renal failure"];
 exclusionICDs = ["C71.9","C71.90","C71.91","C71.92","191.9"]; #brain tumor, nos codes
 AD_x = sort(select(unique(listDXandICD(exclusionDXs,exclusionICDs,AD_data),[:diagnosis,:code]),:code,:diagnosis),:code);
 CSV.write("ICD_exclude.csv",AD_x); #review this CSV!
