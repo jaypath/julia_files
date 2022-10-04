@@ -175,7 +175,7 @@ function recordsWithDXandICD(DX,ICD,sigTable="",anti=false,uniquerecording = tru
 
 end
 
-function listDXandICD(DX,ICD, recordset="")
+function listDXandICD(DX,ICD, sigTable="")
   #list all ICD diagnoses and codes containing specified text (text diagnoses or ICD codes), for the optional recordset (if not specified, use augmented_signals)
   #searchstrings may be an array of elments
 
@@ -215,10 +215,10 @@ function listDXandICD(DX,ICD, recordset="")
     end
   end
       
-  if recordset ==""
+  if sigTable ==""
       subset!(icd_term,:subject => ByRow(s -> s in augmented_signals.subject);skipmissing=true)  
   else
-      subset!(icd_term,:subject => ByRow(s -> s in recordset.subject);skipmissing=true)  
+      subset!(icd_term,:subject => ByRow(s -> s in sigTable.subject);skipmissing=true)  
   end
       
   return unique(icd_term,[:code,:diagnosis,:subject]);
