@@ -1,5 +1,7 @@
 #this file loads subjects, recordings, ICDs (optional), and signals tables
 
+bizopsUtils = true;
+
 using DataFrames, DataMapUtils, Mgh2019Utils, AWSS3, BOME, Dates, Scratch, Arrow
 
 recordings = Mgh2019Utils.load(; schema="bome.recording@1");
@@ -153,16 +155,23 @@ end
 
 
   function searchByNotICD(searchstring,sigTable)
+      #search the provided table for NOT this ICD code.
            icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds) #contains(hastack,needle)
            matches = antijoin(sigTable, icd_term; on=:subject)
            return matches;
   end
     
     
-function listICDs(searchstring)
+function listICDs(searchstring, recordset="")
+      #list all ICD diagnoses containing searchstring, for the optional recordset (if not specified, use augmented_signals)
   #list icd diagnoses (not necessarily codes) corresponding to the text field/description
   #searchstring may be an array of elments
   icd_term = filter(:diagnosis => d -> occursinArray(d,searchstring), icds)  
+  if recordset ==""
+  else
+      subset!(icd_term,:subject => ByRow(s -> s in recordset.subject);skipmissing=true)  
+  end
+      
   return unique(icd_term,:diagnosis);
 end
 
