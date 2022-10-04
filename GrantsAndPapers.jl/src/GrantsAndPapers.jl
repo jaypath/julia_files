@@ -114,46 +114,8 @@ function occursinArray(value,arr)
   return false
 end
 
-function searchByICDcode(searchstring,sigTable = "",makeunique = true)
-    #accepts array of codes
-     icd_term = subset(icds, :code => ByRow(d -> occursinArray(d,searchstring));skipmissing=true); #occursinarray is case insens
-#      filter(:code  => d -> occursinArray(d,searchstring), icds)
-      if sigTable == ""
-          matches = semijoin(augmented_signals, icd_term; on=:subject)
-      else
-          matches = semijoin(sigTable, icd_term; on=:subject)
-      end
-      if makeunique
-         return unique(matches,:recording);
-      else
-         return matches;
-      end
-end
-
-function useICD()
-  return Mgh2019Utils.load(; schema="bome.icd-code@1");
-  
-end
-
-
-  function searchByICD(searchstring,sigTable="",makeunique = true)
-    #accepts array of terms
-      icd_term = subset(icds,:diagnosis => ByRow(d -> occursinArray(lowercase(d),lowercase(searchstring)));skipmissing=true)
-      if sigTable == ""
-          matches = semijoin(augmented_signals, icd_term; on=:subject)
-      else
-          matches = semijoin(sigTable, icd_term; on=:subject)
-      end
-      
-      if makeunique
-         return unique(matches,:recording);
-      else
-         return matches;
-      end
-  end
-
 function searchByDXandCode(DX,ICD,sigTable="",makeunique = true,anti=false)
-      #specify anti=true for NOT DX NOR code
+      #returns recordings table with subjects having (or not having, if anti=true) specified ICDs      
   #accepts array of terms for DX or ICD (or none, by specifying empty string"")
     #convert to code
     if ICD!=""
@@ -189,51 +151,92 @@ function searchByDXandCode(DX,ICD,sigTable="",makeunique = true,anti=false)
       end
 end
 
-function listDXandCode(DX,ICD,sigTable="",anti=false,uniquerecording = true)
-      #provide a list of ICD codes and subjects (uniqued on subject/code if makeunique=true) that  HAVE  the specified ICD Dx or codes 
-      #note that it is ICD or DX (does not require both)
-      #if a sigtable is specified, then provides the RECORDS that HAVE the specified codes
-      #if antijoin is specified WITH sigtable, then returns the records that DO NOT CONTAIN the codes 
+function recordsWithDXandICD(DX,ICD,sigTable="",anti=false,uniquerecording = true)
+      #return records associated with ICD codes (uniqued on recording if makeunique=true) 
+      #note that it is ICD or DX or none (does not require both or even either)
+      #if no icdDX or icds specified, use full table.
+      #if no sigtable is specified, use augmented_signals
+      #if antijoin is specified, then returns the records that DO NOT CONTAIN the codes 
   #accepts array of terms for DX or ICD (or none, by specifying empty string"")
     #convert to code
+    useICD = true;
     if ICD!=""
-      icd_term = unique(subset(icds,:diagnosis => ByRow(d -> occursinArray((d),(ICD)));skipmissing=true),[:subject,:code,:diagnosis]);
+      icd_term = unique(subset(icds,:code => ByRow(d -> occursinArray((d),(ICD)));skipmissing=true),[:subject,:code,:diagnosis]);
     else
-      icd_term = DataFrame(subject=Base.UUID[])
+      useICD = false;
     end
+
+    useDX=true;
     if DX!=""
-      dx_term = unique(subset(icds,:code => ByRow(d -> occursinArray((d),(DX)));skipmissing=true),[:subject,:code,:diagnosis]);
+      dx_term = unique(subset(icds,:diagnosis => ByRow(d -> occursinArray((d),(DX)));skipmissing=true),[:subject,:code,:diagnosis]);
     else
-        dx_term = DataFrame(subject=Base.UUID[])
+        useDX=false;
     end
     
-    icd_term = unique(vcat(dx_term,icd_term),[:subject,:code,:diagnosis]);      
+
+    if useDX && useICD
+        icd_term = unique(vcat(dx_term,icd_term),[:subject,:code,:diagnosis]);      
+    else
+      if useDX
+        icd_term = dx_term;
+      else
+        if useICD
+          icd_term = icd_term;
+        else
+          icd_term =   unique(icds,[:subject,:code,:diagnosis]);      
+        end
+      end
+    end
       
     if sigTable == "" 
-        return icd_term
+        matches = semijoin(augmented_signals, icd_term; on=:subject)
     else      
       if anti==true
           matches = antijoin(sigTable,icd_term;on=:subject);
       else
           matches = semijoin(sigTable, icd_term; on=:subject)
       end        
-      if uniquerecording
-        return unique(matches,[:recording]);
-      else    
-        return matches;
-      end
-      
     end
+    if uniquerecording
+      return unique(matches,[:recording]);
+    else    
+      return matches;
+    end
+
 end
 
+function listDXandICD(DX,ICD, recordset="")
+  #list all ICD diagnoses and codes containing specified text (text diagnoses or ICD codes), for the optional recordset (if not specified, use augmented_signals)
+  #searchstrings may be an array of elments
+  
+  useICD = true
+  if ICD!=""
+      icd_term = unique(subset(icds,:code => ByRow(d -> occursinArray((d),(ICD)));skipmissing=true),[:subject,:code,:diagnosis]);
+  else
+    useICD = false
+  end
+      
+  useDX = true
+  if DX!=""
+    dx_term = unique(subset(icds,:diagnosis => ByRow(d -> occursinArray((d),(DX)));skipmissing=true),[:subject,:code,:diagnosis]);
+  else
+      useDX=false
+  end
 
-    
-    
-function listICDs(searchstring, recordset="")
-      #list all ICD diagnoses containing searchstring, for the optional recordset (if not specified, use augmented_signals)
-  #list icd diagnoses (not necessarily codes) corresponding to the text field/description
-  #searchstring may be an array of elments
-  icd_term = filter(:diagnosis => d -> occursinArray(d,searchstring), icds)  
+  if useDX && useICD
+      icd_term = unique(vcat(dx_term,icd_term),[:subject,:code,:diagnosis]);      
+  else
+    if useDX
+      icd_term = dx_term;
+    else
+      if useICD
+        icd_term = icd_term;
+      else
+        icd_term = unique(icds,[:subject,:code,:diagnosis]);  
+      end
+    end
+  end
+      
   if recordset ==""
       subset!(icd_term,:subject => ByRow(s -> s in augmented_signals.subject);skipmissing=true)  
   else
@@ -243,17 +246,7 @@ function listICDs(searchstring, recordset="")
   return unique(icd_term,[:code,:diagnosis,:subject]);
 end
 
-function searchRecICD(recordings,searchstring = "")
-  #return the ICDs for a given set of recordings. If searchstring is empty, then all ICDs returned.
-  
-  subjUUID = unique(recordings,:subject);
-  if searchstring == ""
-    return unique(subset(icds, :subject => ByRow(s->s in subjUUID.subject); skipmissing=true));
-  else
-    return unique(subset(icds, :subject => ByRow(s->s in subjUUID.subject), :diagnosis=>ByRow(d-> occursin(lowercase(searchstring),lowercase(d))); skipmissing=true));
-  end      
-end
-
+      
 function commonToBoth(set1,set2)
 #search two dataframes for the set that is common to both [inner join]
       return innerjoin(set1,set2,on=:subject)
