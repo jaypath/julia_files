@@ -26,7 +26,7 @@ exclusionICDs = ["C71.9","C71.90","C71.91","C71.92","191.9"]; #brain tumor, nos 
 AD_x = sort(select(unique(listDXandICD(exclusionDXs,exclusionICDs,AD_data),[:diagnosis,:code]),:code,:diagnosis),:code);
 CSV.write("ICD_exclude.csv",AD_x); #review this CSV!
 
-AD_data = searchByDXandCode(exclusionDXs,exclusionICDs,AD_data,true,true);
+AD_data = recordsWithDXandICD(exclusionDXs,exclusionICDs,AD_data,true,true);
 
 #limit by recording parameters
 AD_data = subset(AD_data,:span=>ByRow(a->duration(a)/Nanosecond(Hour(1))>durMin);skipmissing=true); #by recording min dur
