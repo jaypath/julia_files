@@ -1,6 +1,6 @@
 #this file loads subjects, recordings, ICDs (optional), and signals tables
 
-bizopsUtils = true;
+isLoadedBizopsUtils = true;
 
 using DataFrames, DataMapUtils, Mgh2019Utils, AWSS3, BOME, Dates, Scratch, Arrow
 
