@@ -17,7 +17,7 @@ AD = sort(select(unique(listDXandICD("alzheimer",""),[:diagnosis,:code]),:code,:
 CSV.write("ICD_AD.csv",AD); #review this CSV!
 
 #records meeting the first criteria, at the specified age
-AD_data = dropmissing(unique(searchByDXandCode("",unique(AD,:code).code),:recording),:age_in_years); #drop records with missing demographic data
+AD_data = dropmissing(unique(recordsWithDXandICD("",unique(AD,:code).code),:recording),:age_in_years); #drop records with missing demographic data
 AD_data = subset(AD_data,:age_in_years=>ByRow(a->a>ageMin && a<ageMax);skipmissing=true); #by recording, and min age
 
 #exclude 
