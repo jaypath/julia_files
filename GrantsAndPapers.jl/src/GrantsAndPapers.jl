@@ -114,43 +114,6 @@ function occursinArray(value,arr)
   return false
 end
 
-function searchByDXandCode(DX,ICD,sigTable="",makeunique = true,anti=false)
-      #returns recordings table with subjects having (or not having, if anti=true) specified ICDs      
-  #accepts array of terms for DX or ICD (or none, by specifying empty string"")
-    #convert to code
-    if ICD!=""
-      icd_term = select(unique(subset(icds,:diagnosis => ByRow(d -> occursinArray((d),(ICD)));skipmissing=true),:subject),:subject);
-    else
-      icd_term = DataFrame(subject=Base.UUID[])
-    end
-    if DX!=""
-      dx_term = select(unique(subset(icds,:code => ByRow(d -> occursinArray((d),(DX)));skipmissing=true),:subject),:subject);
-    else
-        dx_term = DataFrame(subject=Base.UUID[])
-    end
-    
-    icd_term = unique(vcat(dx_term,icd_term),:subject);      
-    if anti==true
-      if sigTable == ""
-          matches = antijoin(augmented_signals, icd_term; on=:subject)
-      else
-          matches = antijoin(sigTable, icd_term; on=:subject)
-      end
-    else
-      if sigTable == ""
-          matches = semijoin(augmented_signals, icd_term; on=:subject)
-      else
-          matches = semijoin(sigTable, icd_term; on=:subject)
-      end
-    end        
-
-      if makeunique
-         return unique(matches,:recording);
-      else
-         return matches;
-      end
-end
-
 function recordsWithDXandICD(DX,ICD,sigTable="",anti=false,uniquerecording = true)
       #return records associated with ICD codes (uniqued on recording if makeunique=true) 
       #note that it is ICD or DX or none (does not require both or even either)
