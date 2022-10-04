@@ -121,17 +121,24 @@ function recordsWithDXandICD(DX,ICD,sigTable="",anti=false,uniquerecording = tru
       #if no sigtable is specified, use augmented_signals
       #if antijoin is specified, then returns the records that DO NOT CONTAIN the codes 
   #accepts array of terms for DX or ICD (or none, by specifying empty string"")
-    #convert to code
+    
+    #limit the icds table, this speeds things up
+    if sigTable == ""
+      icdtable = semijoin(icds,augmented_signals,on=:subject);
+    else
+      icdtable = semijoin(icds,sigTable,on=:subject);
+    end
+      
     useICD = true;
     if ICD!=""
-      icd_term = unique(subset(icds,:code => ByRow(d -> occursinArray((d),(ICD)));skipmissing=true),[:subject,:code,:diagnosis]);
+      icd_term = unique(subset(icdtable,:code => ByRow(d -> occursinArray((d),(ICD)));skipmissing=true),[:subject,:code,:diagnosis]);
     else
       useICD = false;
     end
 
     useDX=true;
     if DX!=""
-      dx_term = unique(subset(icds,:diagnosis => ByRow(d -> occursinArray((d),(DX)));skipmissing=true),[:subject,:code,:diagnosis]);
+      dx_term = unique(subset(icdtable,:diagnosis => ByRow(d -> occursinArray((d),(DX)));skipmissing=true),[:subject,:code,:diagnosis]);
     else
         useDX=false;
     end
@@ -171,17 +178,25 @@ end
 function listDXandICD(DX,ICD, recordset="")
   #list all ICD diagnoses and codes containing specified text (text diagnoses or ICD codes), for the optional recordset (if not specified, use augmented_signals)
   #searchstrings may be an array of elments
+
+      
+      #limit the icds table, this speeds things up
+    if sigTable == ""
+      icdtable = semijoin(icds,augmented_signals,on=:subject);
+    else
+      icdtable = semijoin(icds,sigTable,on=:subject);
+    end
   
   useICD = true
   if ICD!=""
-      icd_term = unique(subset(icds,:code => ByRow(d -> occursinArray((d),(ICD)));skipmissing=true),[:subject,:code,:diagnosis]);
+      icd_term = unique(subset(icdtable,:code => ByRow(d -> occursinArray((d),(ICD)));skipmissing=true),[:subject,:code,:diagnosis]);
   else
     useICD = false
   end
       
   useDX = true
   if DX!=""
-    dx_term = unique(subset(icds,:diagnosis => ByRow(d -> occursinArray((d),(DX)));skipmissing=true),[:subject,:code,:diagnosis]);
+    dx_term = unique(subset(icdtable,:diagnosis => ByRow(d -> occursinArray((d),(DX)));skipmissing=true),[:subject,:code,:diagnosis]);
   else
       useDX=false
   end
