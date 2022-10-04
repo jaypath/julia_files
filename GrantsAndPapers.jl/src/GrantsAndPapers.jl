@@ -96,8 +96,6 @@ function EZfilterIsEqArr(df,columnname,searchArr, searchCol)
   return temp
 end
     
-
-
   
 function occursinArray(value,arr)
   if isa(arr,Array) == false
@@ -433,4 +431,22 @@ augmented_signals = prepare_augmented_signals();
     
 icds = useICD();
 
-    
+function who(isvar = "")
+      if isvar !==""
+          if (@isdefined isvar) && !contains(string(typeof(eval(isvar))),"typeof")
+            print(string(typeof(eval(isvar))) * " " * string(isvar))
+            return true
+          else
+            return false
+          end        
+      else
+        for i in names(Main)[4:end]        
+          if !contains(string(typeof(eval(i))),"typeof") && !contains(string(typeof(eval(i))),"Module")
+            println(string(i) * " " * string(typeof(eval(i))))
+                
+          end
+        end  
+      end
+end
+      
+      
