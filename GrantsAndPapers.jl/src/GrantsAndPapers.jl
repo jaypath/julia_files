@@ -152,13 +152,81 @@ end
       end
   end
 
+function searchByDXandCode(DX,ICD,sigTable="",makeunique = true,anti=false)
+      #specify anti=true for NOT DX NOR code
+  #accepts array of terms for DX or ICD (or none, by specifying empty string"")
+    #convert to code
+    if ICD!=""
+      icd_term = select(unique(subset(icds,:diagnosis => ByRow(d -> occursinArray((d),(ICD)));skipmissing=true),:subject),:subject);
+    else
+      icd_term = DataFrame(subject=Base.UUID[])
+    end
+    if DX!=""
+      dx_term = select(unique(subset(icds,:code => ByRow(d -> occursinArray((d),(DX)));skipmissing=true),:subject),:subject);
+    else
+        dx_term = DataFrame(subject=Base.UUID[])
+    end
+    
+    icd_term = unique(vcat(dx_term,icd_term),:subject);      
+    if anti==true
+      if sigTable == ""
+          matches = antijoin(augmented_signals, icd_term; on=:subject)
+      else
+          matches = antijoin(sigTable, icd_term; on=:subject)
+      end
+    else
+      if sigTable == ""
+          matches = semijoin(augmented_signals, icd_term; on=:subject)
+      else
+          matches = semijoin(sigTable, icd_term; on=:subject)
+      end
+    end        
 
-  function searchByNotICD(searchstring,sigTable)
-      #search the provided table for NOT this ICD code.
-           icd_term = filter(:diagnosis => d -> contains(lowercase(d),lowercase(searchstring)), icds) #contains(hastack,needle)
-           matches = antijoin(sigTable, icd_term; on=:subject)
-           return matches;
-  end
+      if makeunique
+         return unique(matches,:recording);
+      else
+         return matches;
+      end
+end
+
+function listDXandCode(DX,ICD,sigTable="",anti=false,uniquerecording = true)
+      #provide a list of ICD codes and subjects (uniqued on subject/code if makeunique=true) that  HAVE  the specified ICD Dx or codes 
+      #note that it is ICD or DX (does not require both)
+      #if a sigtable is specified, then provides the RECORDS that HAVE the specified codes
+      #if antijoin is specified WITH sigtable, then returns the records that DO NOT CONTAIN the codes 
+  #accepts array of terms for DX or ICD (or none, by specifying empty string"")
+    #convert to code
+    if ICD!=""
+      icd_term = unique(subset(icds,:diagnosis => ByRow(d -> occursinArray((d),(ICD)));skipmissing=true),[:subject,:code,:diagnosis]);
+    else
+      icd_term = DataFrame(subject=Base.UUID[])
+    end
+    if DX!=""
+      dx_term = unique(subset(icds,:code => ByRow(d -> occursinArray((d),(DX)));skipmissing=true),[:subject,:code,:diagnosis]);
+    else
+        dx_term = DataFrame(subject=Base.UUID[])
+    end
+    
+    icd_term = unique(vcat(dx_term,icd_term),[:subject,:code,:diagnosis]);      
+      
+    if sigTable == "" 
+        return icd_term
+    else      
+      if anti==true
+          matches = antijoin(sigTable,icd_term;on=:subject);
+      else
+          matches = semijoin(sigTable, icd_term; on=:subject)
+      end        
+      if uniquerecording
+        return unique(matches,[:recording]);
+      else    
+        return matches;
+      end
+      
+    end
+end
+
+
     
     
 function listICDs(searchstring, recordset="")
@@ -167,11 +235,12 @@ function listICDs(searchstring, recordset="")
   #searchstring may be an array of elments
   icd_term = filter(:diagnosis => d -> occursinArray(d,searchstring), icds)  
   if recordset ==""
+      subset!(icd_term,:subject => ByRow(s -> s in augmented_signals.subject);skipmissing=true)  
   else
       subset!(icd_term,:subject => ByRow(s -> s in recordset.subject);skipmissing=true)  
   end
       
-  return unique(icd_term,:diagnosis);
+  return unique(icd_term,[:code,:diagnosis,:subject]);
 end
 
 function searchRecICD(recordings,searchstring = "")
