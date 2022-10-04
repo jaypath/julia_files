@@ -98,6 +98,7 @@ end
     
   
 function occursinArray(value,arr)
+      #case insensitive
   if isa(arr,Array) == false
     if occursin(lowercase(arr),lowercase(value)) 
       return true
@@ -115,7 +116,7 @@ end
 
 function searchByICDcode(searchstring,sigTable = "",makeunique = true)
     #accepts array of codes
-     icd_term = subset(icds, :code => ByRow(d -> occursinArray(lowercase(d),lowercase(searchstring)));skipmissing=true);
+     icd_term = subset(icds, :code => ByRow(d -> occursinArray(d,searchstring));skipmissing=true); #occursinarray is case insens
 #      filter(:code  => d -> occursinArray(d,searchstring), icds)
       if sigTable == ""
           matches = semijoin(augmented_signals, icd_term; on=:subject)
