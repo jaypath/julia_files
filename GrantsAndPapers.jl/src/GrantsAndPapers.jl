@@ -28,6 +28,10 @@ function useReports()
   return Mgh2019Utils.load(; schema="bome.report@1");
 end
 
+function useICD()
+  return Mgh2019Utils.load(; schema="bome.icd-code@1");
+  
+end
 
 function useMeds()
    MEDICATIONS_ARROW_TABLE_ORIGIN = "s3://project-jasper-sandbox/eph-sandbox/all_meds_data.arrow"
@@ -129,11 +133,11 @@ function recordsWithDXandICD(DX,ICD,sigTable="",anti=false,uniquerecording = tru
       icdtable = semijoin(icds,sigTable,on=:subject);
     end
       
-    useICD = true;
+    useCODE = true;
     if ICD!=""
       icd_term = unique(subset(icdtable,:code => ByRow(d -> occursinArray((d),(ICD)));skipmissing=true),[:subject,:code,:diagnosis]);
     else
-      useICD = false;
+      useCODE = false;
     end
 
     useDX=true;
@@ -144,13 +148,13 @@ function recordsWithDXandICD(DX,ICD,sigTable="",anti=false,uniquerecording = tru
     end
     
 
-    if useDX && useICD
+    if useDX && useCODE
         icd_term = unique(vcat(dx_term,icd_term),[:subject,:code,:diagnosis]);      
     else
       if useDX
         icd_term = dx_term;
       else
-        if useICD
+        if useCODE
           icd_term = icd_term;
         else
           icd_term =   unique(icds,[:subject,:code,:diagnosis]);      
@@ -187,11 +191,11 @@ function listDXandICD(DX,ICD, sigTable="")
       icdtable = semijoin(icds,sigTable,on=:subject);
     end
   
-  useICD = true
+  useCODE = true
   if ICD!=""
       icd_term = unique(subset(icdtable,:code => ByRow(d -> occursinArray((d),(ICD)));skipmissing=true),[:subject,:code,:diagnosis]);
   else
-    useICD = false
+    useCODE = false
   end
       
   useDX = true
@@ -201,13 +205,13 @@ function listDXandICD(DX,ICD, sigTable="")
       useDX=false
   end
 
-  if useDX && useICD
+  if useDX && useCODE
       icd_term = unique(vcat(dx_term,icd_term),[:subject,:code,:diagnosis]);      
   else
     if useDX
       icd_term = dx_term;
     else
-      if useICD
+      if useCODE
         icd_term = icd_term;
       else
         icd_term = unique(icds,[:subject,:code,:diagnosis]);  
