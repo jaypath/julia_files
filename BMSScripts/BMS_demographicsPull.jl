@@ -26,7 +26,7 @@ AD_data = subset(AD_data,:age_in_years=>ByRow(a->a>ageMin && a<ageMax);skipmissi
 
 #exclude 
 println("Eliminate exclusion codes from dataset.")
-exclusionDXs = ["CNS lymphoma","cocaine dependence","cocaine use","opiate dependence","opiate use","Pick's disease","fronto-temporal dementia","frontotemporal dementia","hydrocephalus","lewy body","multiple systems atrophy","ALS","amyotrophic lateral sclerosis","encephalomalacia","muscular dystrophe","trisomy","mitochondrial","vascular dementia","stroke","alcohol","substance","encephalitis","Creutzfeldt","multiple sclerosis","brain tumor","neoplasm of brain","schizophrenia","glioblastoma","glioma","astrocytoma","cirrhosis","renal failure"];
+exclusionDXs = ["Chronic kidney disease","traumatic brain injury","TBI","traumatic injury of head","CNS lymphoma","cocaine dependence","cocaine use","opiate dependence","opiate use","Pick's disease","fronto-temporal dementia","frontotemporal dementia","hydrocephalus","lewy body","multiple systems atrophy","ALS","amyotrophic lateral sclerosis","encephalomalacia","muscular dystrophe","trisomy","mitochondrial","vascular dementia","stroke","alcohol","substance","encephalitis","Creutzfeldt","multiple sclerosis","brain tumor","neoplasm of brain","schizophrenia","glioblastoma","glioma","astrocytoma","cirrhosis","renal failure"];
 exclusionICDs = ["C71.9","C71.90","C71.91","C71.92","191.9","192.1","198.3","200.50"]; #want to convert code to text? use listDXandICD("",codes,"")
 AD_x = unique(DXandICD_Subjects(exclusionDXs,exclusionICDs,AD_data),[:diagnosis,:code,:subject]); #subjects and diagnoses that were excluded
 CSV.write("ICD_exclude.csv",sort(unique(select(AD_x,:code,:diagnosis)),:code)); #review this CSV!
@@ -56,7 +56,8 @@ CSV.write("AD_EEG_ICD.csv",sort(unique(select(AD_EEG_ICD,:code,:diagnosis),[:dia
 
 
 AD_EEG_ICD_bin = sort(binThisDF(unique(AD_EEG_ICD,[:code, :subject]),:code),:num,rev=true); #binthisdf does not accept 2 columns, this is the same, but explicitly uses 2 cols
-CSV.write("AD_EEG_ICDbysubject.csv",AD_EEG_ICD_bin); #review this CSV!
 CodeAndDx = select(sort(innerjoin(unique(icds,:code),AD_EEG_ICD_bin,on=:code),:code,rev=true),:code,:diagnosis);
-CSV.write("AD_EEG_ICDmap.csv",CodeAndDx); #review this CSV!
+AD_EEG_ICD_bin= sort(innerjoin(AD_EEG_ICD_bin,CodeAndDx,on=:code),:num,rev=true);
+CSV.write("AD_EEG_ICDbysubject.csv",AD_EEG_ICD_bin); #review this CSV!
+
 
