@@ -118,7 +118,7 @@ function occursinArray(value,arr)
   return false
 end
 
-function DXandICD_Records(DX,ICD,sigTable="",anti=false,uniquerecording = true)
+function DXandICD_Records(DX,ICD,sigTable=augmented_signals,anti=false,uniquerecording = true)
       #return records associated with ICD codes (uniqued on recording if makeunique=true) 
       #note that it is ICD or DX or none (does not require both or even either)
       #if no icdDX or icds specified, use full table.
@@ -127,11 +127,7 @@ function DXandICD_Records(DX,ICD,sigTable="",anti=false,uniquerecording = true)
   #accepts array of terms for DX or ICD (or none, by specifying empty string"")
     
     #limit the icds table, this speeds things up
-    if sigTable == ""
-      icdtable = semijoin(icds,augmented_signals,on=:subject);
-    else
       icdtable = semijoin(icds,sigTable,on=:subject);
-    end
       
     useCODE = true;
     if ICD!=""
@@ -157,20 +153,17 @@ function DXandICD_Records(DX,ICD,sigTable="",anti=false,uniquerecording = true)
         if useCODE
           icd_term = icd_term;
         else
-          icd_term =   unique(icds,[:subject,:code,:diagnosis]);      
+          icd_term =   unique(icdtable,[:subject,:code,:diagnosis]);      
         end
       end
     end
       
-    if sigTable == "" 
-        matches = semijoin(augmented_signals, icd_term; on=:subject)
-    else      
-      if anti==true
-          matches = antijoin(sigTable,icd_term;on=:subject);
-      else
-          matches = semijoin(sigTable, icd_term; on=:subject)
-      end        
-    end
+    if anti==true
+        matches = antijoin(sigTable,icd_term;on=:subject);
+    else
+        matches = semijoin(sigTable, icd_term; on=:subject)
+    end        
+
     if uniquerecording
       return unique(matches,[:recording]);
     else    
@@ -179,17 +172,12 @@ function DXandICD_Records(DX,ICD,sigTable="",anti=false,uniquerecording = true)
 
 end
 
-function DXandICD_Subjects(DX,ICD, sigTable="")
+function DXandICD_Subjects(DX,ICD, sigTable=augmented_signals)
   #list all ICD diagnoses and codes containing specified text (text diagnoses or ICD codes), for the optional recordset (if not specified, use augmented_signals)
   #searchstrings may be an array of elments
 
       
-      #limit the icds table, this speeds things up
-    if sigTable == ""
-      icdtable = semijoin(icds,augmented_signals,on=:subject);
-    else
-      icdtable = semijoin(icds,sigTable,on=:subject);
-    end
+    icdtable = semijoin(icds,sigTable,on=:subject);
   
   useCODE = true
   if ICD!=""
@@ -214,21 +202,17 @@ function DXandICD_Subjects(DX,ICD, sigTable="")
       if useCODE
         icd_term = icd_term;
       else
-        icd_term = unique(icds,[:subject,:code,:diagnosis]);  
+        return unique(icdtable,[:subject,:code,:diagnosis]);  
       end
     end
   end
       
-  if sigTable ==""
-      subset!(icd_term,:subject => ByRow(s -> s in augmented_signals.subject);skipmissing=true)  
-  else
-      subset!(icd_term,:subject => ByRow(s -> s in sigTable.subject);skipmissing=true)  
-  end
+  subset!(icd_term,:subject => ByRow(s -> s in sigTable.subject);skipmissing=true)  
       
   return unique(icd_term,[:code,:diagnosis,:subject]);
 end
 
-function DXandICD_ICDsBySubject(DX,ICD, sigTable=augmented_signals, anti = false)
+function DXandICD_ICDsBySubject(DX,ICD, sigTable=augmented_signals)
   #Returns ALL ICDs for the subjects in recordset having (or not having, if anti is set) the specified ICD diagnoses and codes
   #searchstrings may be an array of elments
 
@@ -249,24 +233,20 @@ function DXandICD_ICDsBySubject(DX,ICD, sigTable=augmented_signals, anti = false
   end
 
   if useDX && useCODE
-      icd_term = unique(vcat(dx_term,icd_term),[:subject,:code,:diagnosis]);      
+      icd_term = unique(vcat(dx_term,icd_term),[:subject]);      
   else
     if useDX
-      icd_term = dx_term;
+      icd_term = unique(dx_term,:subject);
     else
       if useCODE
-        icd_term = icd_term;
+        icd_term = unique(icd_term,:subject);
       else
-        icd_term = unique(icds,[:subject,:code,:diagnosis]);  
+        return unique(icdtable,[:code, :diagnosis, :subject]);  
       end
     end
   end
       
-  if anti==false
-      return unique(subset!(icds,:subject => ByRow(s -> s in icd_term.subject);skipmissing=true),[:code, :diagnosis, :subject]);
-  else
-      return unique(subset!(icds,:subject => ByRow(s -> s not in icd_term.subject);skipmissing=true),[:code, :diagnosis, :subject]);
-  end
+  return unique(subset!(icdtable,:subject => ByRow(s -> s in icd_term.subject);skipmissing=true),[:code, :diagnosis, :subject]);
 end
 
       
