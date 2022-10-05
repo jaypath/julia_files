@@ -228,7 +228,7 @@ function DXandICD_Subjects(DX,ICD, sigTable="")
   return unique(icd_term,[:code,:diagnosis,:subject]);
 end
 
-function DXandICDs_ICDsBySubject(DX,ICD, sigTable=augmented_signals, anti = false)
+function DXandICD_ICDsBySubject(DX,ICD, sigTable=augmented_signals, anti = false)
   #Returns ALL ICDs for the subjects in recordset having (or not having, if anti is set) the specified ICD diagnoses and codes
   #searchstrings may be an array of elments
 
