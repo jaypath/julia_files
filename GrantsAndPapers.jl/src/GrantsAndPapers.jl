@@ -1,3 +1,5 @@
+#reminder, does not automatically load meds table. use meds = useMeds();
+
 #this file loads subjects, recordings, ICDs (optional), and signals tables
 
 isLoadedBizopsUtils = true;
